@@ -6,19 +6,23 @@ import { HiOutlineShoppingBag } from 'react-icons/hi';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { FiLogOut } from 'react-icons/fi';
 import { AiOutlineDown } from 'react-icons/ai';
-import { PATH_URL } from '../../../../constant';
 import { useHooks } from '../../../../hooks/useHooks';
+import { useAuth } from '../../../../utils/useContext';
 
 const Account = () => {
     const [selectedOption, setSelectedOption] = useState("My Profile");
     const {status:isDropdownOpen, handleStatus:toggleDropdown} = useHooks();
-    
+    const {logOutAction} = useAuth();
 
     // Function to handle option selection
     const handleOptionClick = (option) => {
         setSelectedOption(option); // Update the selected option
         toggleDropdown()     // Close the dropdown after selecting
     };
+
+    const handleLogOut = ()=>{
+        logOutAction()
+    }
 
     return (
         <div className="md:flex  m-2">
@@ -64,8 +68,7 @@ const Account = () => {
                             </NavLink>
 
                             <NavLink
-                                to = "/signin"
-                                onClick={() => handleOptionClick("Log Out")}
+                                onClick={handleLogOut}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
                             >
                                 <FiLogOut className="inline-block mr-3" size={24} />
@@ -109,7 +112,7 @@ const Account = () => {
                 </NavLink>
 
                 <NavLink
-                    to={PATH_URL.SIGN_IN}
+                    onClick={handleLogOut}
                     className="flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 transition duration-300 ease-in-out w-full"
                 >
                     <FiLogOut className="mr-3" size={28} />

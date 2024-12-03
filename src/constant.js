@@ -1,4 +1,7 @@
-export const PATH_URL = {
+import axios from 'axios';
+
+
+const PATH_URL = {
     HOME: '/',
     CATEGORIES: '/categories',
     SIGN_IN: '/signin',
@@ -21,3 +24,34 @@ export const PATH_URL = {
         EDIT_PRODUCT: '/sell/dashboard/edit-product'
     },
 };
+
+
+// apiRoutes.js
+const POST_ROUTES = {
+    SIGN_UP: '/signup',
+    SIGN_IN: '/signin',
+    FORGOT_PASSWORD: '/forgotpassword',
+    RESET_PASSWORD:(token) => `/reset-password/${token}`,
+};
+  
+const GET_ROUTES = {
+    GET_SINGLE_USER: (id) => `/getsingleuser/${id}`,
+    GET_USER_PROFILE: '/get-user-profile',
+    LOGOUT: `/logout`,
+    GET_ALL_USERS: '/get-all-users'
+};
+  
+  const PATCH_ROUTES = {
+    UPDATE_USER_PROFILE: (id) => `/update-user-profil/${id}`,
+    UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
+  };
+  
+  
+
+ // Axios instance
+ const axiosInstance = axios.create({
+  baseURL: "http://localhost:4000",
+  withCredentials: true 
+});
+
+export {PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES , axiosInstance};

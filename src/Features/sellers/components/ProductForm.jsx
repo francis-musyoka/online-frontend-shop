@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { validateProductForm } from '../../../utilis/validateForms';
+import { validateProductForm } from '../../../utils/validateForms';
 
 
 const ProductForm = (props) => {

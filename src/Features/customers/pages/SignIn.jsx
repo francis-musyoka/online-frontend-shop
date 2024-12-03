@@ -1,16 +1,14 @@
 import React, {  } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PATH_URL } from '../../../constant';
 import SignInForm from '../../../components/SignInForm';
+import { useAuth } from '../../../utils/useContext';
 
 
 const SignIn = () => {
+    const {logInAction} = useAuth();
     
-    const navigate = useNavigate();  
-
     const handleSubmit =(formData)=>{
-        console.log(formData);
-        navigate(PATH_URL.ACCOUNT.BASE)   
+        const {email,password} = formData;
+        logInAction(email,password)
     }
 
     return (

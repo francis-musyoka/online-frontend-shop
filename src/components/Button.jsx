@@ -5,7 +5,7 @@ const Button = (props) => {
 
     
     const classes = `btn btn-${variant} btn-${size} ${disabled ? "btn-disabled" : ""} ${className}`;
-    console.log(classes);
+    
     
   return (
     <button 

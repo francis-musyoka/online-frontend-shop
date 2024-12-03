@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { validateLoginForm } from '../utilis/validateForms';
+import { validateLoginForm } from '../utils/validateForms';
 import { PATH_URL } from '../constant';
 import { useHooks } from '../hooks/useHooks';
 

@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { validateAddressForm } from '../../../utilis/validateForms';
+import { validateAddressForm } from '../../../utils/validateForms';
 import OpenAccount from '../../../components/OpenAccount';
 import { Link } from 'react-router-dom';
 

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ValidateCreateAccountForm } from '../utilis/validateForms';
+import { ValidateCreateAccountForm } from '../utils/validateForms';
 import { PATH_URL } from '../constant';
 import { useHooks } from '../hooks/useHooks';
 
@@ -37,7 +37,7 @@ const OpenAccount = (props) => {
 
     //Handle form Submission
     const handleSubmit = (e) => {
-        const formData = {firstName, lastName, email, password}
+        const formData = {firstName, lastName, email, password ,confirmPassword}
         e.preventDefault();
         const isValid = validateSignUpForm();
         if (isValid) {

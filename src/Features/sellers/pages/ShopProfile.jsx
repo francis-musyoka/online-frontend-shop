@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { validateAddressForm ,validate} from '../../../utilis/validateForms';
+import { validateAddressForm ,validate} from '../../../utils/validateForms';
 import Button from '../../../components/Button';
 
 
