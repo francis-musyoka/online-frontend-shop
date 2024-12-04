@@ -7,7 +7,7 @@ import { HiMiniUserCircle } from 'react-icons/hi2';
 import { GrSearch } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
 import { PATH_URL } from '../../../constant';
-import { useAuth } from '../../../utils/useContext';
+import { useAuth } from '../../../utils/AuthContext';
 
 
 const Navbar = () => {

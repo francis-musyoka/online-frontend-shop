@@ -42,7 +42,7 @@ const GET_ROUTES = {
 };
   
   const PATCH_ROUTES = {
-    UPDATE_USER_PROFILE: (id) => `/update-user-profil/${id}`,
+    UPDATE_USER_PROFILE: (id) => `/update-user-profile/${id}`,
     UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
   };
   

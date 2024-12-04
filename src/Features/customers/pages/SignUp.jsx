@@ -2,12 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import OpenAccount from '../../../components/OpenAccount';
 import { axiosInstance, PATH_URL, POST_ROUTES } from '../../../constant';
+import { useToast } from '../../../utils/ToastContext';
 
 
 const SignUp = () => {
 
     const navigate = useNavigate();
-
+    const {showToast} = useToast();
     const handleSubmit = async(formData) => {
         console.log(formData);
         
@@ -21,13 +22,13 @@ const SignUp = () => {
                 confirmPassword
             });
 
-            if(response.data.success === true){
+            if(response.data.success){
+                showToast('Account created Successfully', 'success');
                 navigate(PATH_URL.SIGN_IN);
             }
             
         } catch (error) {
-            console.log(error);
-            
+            showToast(error.response.data.error, 'error'); 
         }
         
     };

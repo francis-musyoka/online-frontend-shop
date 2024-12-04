@@ -19,15 +19,17 @@ import EditProduct from './Features/sellers/pages/EditProduct';
 import ShopProfile from './Features/sellers/pages/ShopProfile';
 import MyProducts from './Features/sellers/pages/MyProducts';
 import CreateAccount from './Features/sellers/pages/CreateAccount';
-import AuthProvider from './utils/useContext';
+import AuthProvider from './utils/AuthContext';
 import RequireAuth from './Features/customers/component/RequireAuth';
+import ToastProvider from './utils/ToastContext';
 
 function App() {
-  
+ 
   return (
     <>
       <BrowserRouter>
         {/* customers */}
+        <ToastProvider>
         <AuthProvider>
           <Routes>
             <Route path={PATH_URL.HOME} element={<Layout/>}>
@@ -60,7 +62,8 @@ function App() {
           <Route path={PATH_URL.SELL.CREATE_BUSINESS_ACCOUNT} element={<CreateAccount />} />
           <Route path={PATH_URL.SELL.LOG_IN} element={<Login/>}/>
 
-        </Routes>      
+        </Routes>   
+        </ToastProvider>   
       </BrowserRouter>
     </>
   );

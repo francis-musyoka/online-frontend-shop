@@ -173,3 +173,37 @@ export const validateProductForm = (formData) => {
     return errors;
 };
 
+export const validateUpdateForm = (firstName,lastName,email)=>{
+    const error = {};
+    if(!email.trim()){
+        error.email = "Please Enter Email"
+    }else if(!isEmailValid(email)){
+        error.email = "Please Enter Valid Email"
+    }
+
+    if(!firstName.trim()){
+        error.firstName = "Please Enter first name"
+    }
+    if(!lastName.trim()){
+        error.lastName = "Please Enter last name"
+    }
+ 
+    return error
+};
+
+export const validateChangePassword =(currentPassword,password,confirmPassword)=>{
+    const error ={};
+    if (!password.trim()) {
+        error.password = "Please enter password";
+     }else if (!isPasswordValid(password)) {
+        error.password = `Password should at least have 1 number, 1 lowercase letter, 1 uppercase letter, 
+        1 special character, no space, and it must be 6-16 characters long.`;
+    };
+    if (!currentPassword.trim()) {
+        error.currentPassword = "Please enter current password";
+     };
+     if (password !== confirmPassword) {
+        error.confirmPassword = "Passwords do not match";
+    };
+    return error
+};
