@@ -40,13 +40,12 @@ export const ValidateCreateAccountForm =     (
         error.businessName = "Please Enter Business Name";
     }
 
-    if (businessNumber !== null) {
-        if (!businessNumber.trim()) {
-            error.businessNumber = "Please Enter Business Number";
-        } else if (!isPhoneNumberValid(businessNumber)) {
-            error.businessNumber = "Please Enter Valid Phone Number";
-        }
+    if (businessNumber !== null && !businessNumber.trim()) {
+        error.businessNumber = "Please Enter Business Number";
+    }else if (!isPhoneNumberValid(businessNumber)) {
+        error.businessNumber = "Please Enter Valid Phone Number";
     }
+    
 
     if (!email.trim()) {
         error.email = "Please Enter Email";
@@ -191,19 +190,20 @@ export const validateUpdateForm = (firstName,lastName,email)=>{
     return error
 };
 
-export const validateChangePassword =(currentPassword,password,confirmPassword)=>{
+export const validateChangePassword =(password,confirmPassword,currentPassword=null)=>{
     const error ={};
     if (!password.trim()) {
         error.password = "Please enter password";
      }else if (!isPasswordValid(password)) {
         error.password = `Password should at least have 1 number, 1 lowercase letter, 1 uppercase letter, 
         1 special character, no space, and it must be 6-16 characters long.`;
-    };
-    if (!currentPassword.trim()) {
-        error.currentPassword = "Please enter current password";
-     };
-     if (password !== confirmPassword) {
+    }
+    if (password !== confirmPassword) {
         error.confirmPassword = "Passwords do not match";
     };
+    if (currentPassword !== null && !currentPassword.trim()) {
+        error.currentPassword = "Please enter current password";
+     }
+     
     return error
 };

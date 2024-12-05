@@ -22,6 +22,8 @@ import CreateAccount from './Features/sellers/pages/CreateAccount';
 import AuthProvider from './utils/AuthContext';
 import RequireAuth from './Features/customers/component/RequireAuth';
 import ToastProvider from './utils/ToastContext';
+import NotFound from './components/NotFound';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
  
@@ -32,11 +34,11 @@ function App() {
         <ToastProvider>
         <AuthProvider>
           <Routes>
+            <Route path='*' element ={<NotFound/>}/>
             <Route path={PATH_URL.HOME} element={<Layout/>}>
               <Route path={PATH_URL.HOME} element={<Home />} />
               <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
               <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
-              <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
               <Route path={PATH_URL.CART} element={<Cart />} />
               <Route element={<RequireAuth/>}>
                 <Route path={PATH_URL.ACCOUNT.BASE} element={<Account />}>
@@ -46,6 +48,8 @@ function App() {
                 </Route>
               </Route>
             </Route>
+            <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
+            <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
             <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />
           </Routes>
         </AuthProvider>

@@ -4,6 +4,7 @@ import { validateChangePassword } from '../../../../utils/validateForms';
 import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
 import { useToast } from '../../../../utils/ToastContext';
 
+
 const ChangePassword = ({closeModal, user}) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [password, setPassword] = useState('');
@@ -12,9 +13,8 @@ const ChangePassword = ({closeModal, user}) => {
     const [formErrors, setFormErros] = useState({});
 
     const {showToast} = useToast();
-
     const validateForm = ()=>{
-        const errors = validateChangePassword(currentPassword,password,confirmPassword);
+        const errors = validateChangePassword(password,confirmPassword,currentPassword);
         setFormErros(errors)
         return Object.keys(errors).length < 1 
     }

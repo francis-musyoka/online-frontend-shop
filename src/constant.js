@@ -8,6 +8,7 @@ const PATH_URL = {
     SIGN_UP: '/signup',
     CART: '/cart',
     FORGOT_PASSWORD: '/forgotpassword',
+    RESETPASSWORD: "/reset-password/:link", 
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
@@ -31,7 +32,7 @@ const POST_ROUTES = {
     SIGN_UP: '/signup',
     SIGN_IN: '/signin',
     FORGOT_PASSWORD: '/forgotpassword',
-    RESET_PASSWORD:(token) => `/reset-password/${token}`,
+    RESET_PASSWORD:(link) => `/resetpassword/${link}`,
 };
   
 const GET_ROUTES = {
