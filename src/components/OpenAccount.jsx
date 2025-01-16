@@ -6,14 +6,16 @@ import { PATH_URL } from '../constant';
 import { useHooks } from '../hooks/useHooks';
 
 const OpenAccount = (props) => {
+    const storedData = JSON.parse(localStorage.getItem("data")) || {};
+    
     const {onSubmitHandler, isSeller, handleNextStep} = props
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [businessName, setBusinessName] = useState("");
-    const [businessNumber, setBusinessNumber] = useState("");
-    const [email, setemail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [businessName, setBusinessName] = useState(storedData.businessName || "");
+    const [businessNumber, setBusinessNumber] = useState(storedData.businessNumber || "");
+    const [email, setEmail] = useState(storedData.email || "");
+    const [password, setPassword] = useState(storedData.password || "");
+    const [confirmPassword, setConfirmPassword] = useState(storedData.confirmPassword || "");
     const [formErrors, setFormErrors] = useState({});
     
 
@@ -40,8 +42,10 @@ const OpenAccount = (props) => {
         const formData = {firstName, lastName, email, password ,confirmPassword}
         e.preventDefault();
         const isValid = validateSignUpForm();
+        console.log("Form is Valid:", isValid);
         if (isValid) {
-            onSubmitHandler(formData)
+            onSubmitHandler(formData);
+            
         }
     };
 
@@ -57,7 +61,7 @@ const OpenAccount = (props) => {
                 password,
                 confirmPassword,
             };
-            console.log(sellerData);
+            localStorage.setItem('data', JSON.stringify(sellerData))
             
             handleNextStep(sellerData); 
         }  
@@ -91,7 +95,7 @@ const OpenAccount = (props) => {
                             name="email"
                             id="email"
                             value={email}
-                            onChange={(e) => setemail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="block py-2.5 px-0 w-full text-lg text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         />
                         <label
@@ -164,7 +168,7 @@ const OpenAccount = (props) => {
                     </>):(
                     <>
                         <button
-                            type="submit"
+                            type='submit'
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-lg w-full py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
                            Sign Up

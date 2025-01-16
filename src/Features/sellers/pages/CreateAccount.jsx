@@ -1,23 +1,27 @@
 import React,{useState} from 'react';
 import { validateAddressForm } from '../../../utils/validateForms';
 import OpenAccount from '../../../components/OpenAccount';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { PATH_URL } from '../../../constant';
 
 
 
 const CreateAccount = () => {
+    const storedData = JSON.parse(localStorage.getItem('addressData')) || {}
     const [step, setStep] = useState(1);
     const [openAccountData, setOpenAccountData] = useState({});
     const [addressData, setAddressData] = useState({
-        addressLine1: "",
-        addressLine2: "",
-        city: "",
-        state: "",
-        zipCode: "",
+        addressLine1: storedData.addressLine1 || "",
+        addressLine2: storedData.addressLine2 || "",
+        city: storedData.city || "",
+        state: storedData.state || "",
+        zipCode: storedData.zipCode || "",
     });
 
     const [formErrors, setFormErrors] = useState('');
-    const [isChecked, setIsChecked] = useState(false)
+    const [isChecked, setIsChecked] = useState(false);
+
+    const navigate =  useNavigate();
 
     // Validates the form data for the address section
     const validateForm = (addressData) =>{
@@ -46,16 +50,18 @@ const CreateAccount = () => {
     // Decrements the step counter to go back to the previous step.
     const handlePreviousStep = () => {
         setStep(step - 1);
+        localStorage.setItem('addressData', JSON.stringify(addressData))
     };
 
   
     const handleSubmit =(e)=>{
         e.preventDefault();
         const isValid = validateForm(addressData);
-
         // Merge the open account and address data
         if(isValid){
             const formData = {...openAccountData, ...addressData};
+            localStorage.clear();
+            navigate(PATH_URL.SELL.LOG_IN)
             console.log(formData);   
         }
     }

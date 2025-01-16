@@ -41,6 +41,9 @@ const ChangePassword = ({closeModal, user}) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg shadow-lg w-80 p-6">
             <h4 className="text-lg font-semibold mb-4">Change Password</h4>
+            <p className="block text-sm font-medium text-gray-700 mb-6">
+                    Your new password must be different from previous password.
+                </p> 
             <hr className='my-3 '/>
             <div className="mb-3">
                 <label className="block text-sm font-medium text-gray-700">

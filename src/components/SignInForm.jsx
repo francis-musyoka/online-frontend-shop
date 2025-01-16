@@ -63,10 +63,10 @@ const SignInForm = (props) => {
                         />
                         {formErrors.password && <span className="text-red-700 text-xs">{formErrors.password}</span>}
                     </div>
-                    <div class="flex justify-start mb-4">
+                    <div className="flex justify-start mb-4">
                         <input 
                             type="checkbox"
-                            class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                             onClick={handleClick}
                             checked={showPassword}
                         />

@@ -6,12 +6,11 @@ import { useToast } from '../../../utils/ToastContext';
 
 
 const SignUp = () => {
-
+    
     const navigate = useNavigate();
     const {showToast} = useToast();
-    const handleSubmit = async(formData) => {
-        console.log(formData);
-        
+    
+    const handleSubmit = async(formData) => {    
         const{firstName, lastName, email, password,confirmPassword}=formData
         try {
             const response = await axiosInstance.post(`${POST_ROUTES.SIGN_UP}`,{

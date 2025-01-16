@@ -40,11 +40,13 @@ export const ValidateCreateAccountForm =     (
         error.businessName = "Please Enter Business Name";
     }
 
-    if (businessNumber !== null && !businessNumber.trim()) {
-        error.businessNumber = "Please Enter Business Number";
-    }else if (!isPhoneNumberValid(businessNumber)) {
-        error.businessNumber = "Please Enter Valid Phone Number";
-    }
+    if (businessNumber !== null){
+        if (!businessNumber.trim()) {
+            error.businessNumber = "Please Enter Business Number";
+        }else if (!isPhoneNumberValid(businessNumber)) {
+            error.businessNumber = "Please Enter Valid Phone Number";
+        }
+    } 
     
 
     if (!email.trim()) {
@@ -201,9 +203,13 @@ export const validateChangePassword =(password,confirmPassword,currentPassword=n
     if (password !== confirmPassword) {
         error.confirmPassword = "Passwords do not match";
     };
-    if (currentPassword !== null && !currentPassword.trim()) {
-        error.currentPassword = "Please enter current password";
-     }
+    if (currentPassword !== null){
+        if(!currentPassword.trim()) {
+            error.currentPassword = "Please enter current password";
+         }else if (currentPassword === password){
+            error.password = "Your new password must be different from current password.";
+         }
+    } 
      
     return error
 };

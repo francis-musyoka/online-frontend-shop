@@ -20,7 +20,6 @@ const Layout = () => {
             </header>
             
             <div className='min-h-screen' >
-                
                 <Outlet/>
             </div>
 

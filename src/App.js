@@ -26,16 +26,20 @@ import NotFound from './components/NotFound';
 import ResetPassword from './components/ResetPassword';
 
 function App() {
+
  
   return (
     <>
       <BrowserRouter>
-        {/* customers */}
         <ToastProvider>
-        <AuthProvider>
           <Routes>
-            <Route path='*' element ={<NotFound/>}/>
-            <Route path={PATH_URL.HOME} element={<Layout/>}>
+
+            {/* customers */}
+            <Route path={PATH_URL.HOME} element={
+              <AuthProvider>
+               <Layout/>
+              </AuthProvider>
+              }>
               <Route path={PATH_URL.HOME} element={<Home />} />
               <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
               <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
@@ -51,12 +55,9 @@ function App() {
             <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
             <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
             <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />
-          </Routes>
-        </AuthProvider>
-
+            <Route path='*' element ={<NotFound/>}/>
+        
         {/* SELLER ROUTES */}
-        <Routes>
-
           <Route path={PATH_URL.SELL.DASHBOARD} element={<SellDashBoard />}>
             <Route path={PATH_URL.SELL.PROFILE} element={<ShopProfile/>}/>
             <Route path={PATH_URL.SELL.ADD_PRODUCTS} element={<AddProduct/>}/>
@@ -68,6 +69,7 @@ function App() {
 
         </Routes>   
         </ToastProvider>   
+       
       </BrowserRouter>
     </>
   );
