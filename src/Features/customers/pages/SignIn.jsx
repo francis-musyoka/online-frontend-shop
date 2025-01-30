@@ -5,8 +5,6 @@ import { useAuth } from '../../../utils/AuthContext';
 
 const SignIn = () => {
     const {logInAction} = useAuth();
-    console.log(logInAction);
-    
     const handleSubmit =(formData)=>{
         const {email,password} = formData;
         logInAction(email,password)

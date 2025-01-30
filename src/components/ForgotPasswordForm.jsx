@@ -1,40 +1,23 @@
 import React, { useState } from 'react';
 import { isEmailValid } from '../utils';
-import { useToast } from '../utils/ToastContext';
-import { axiosInstance, PATH_URL, POST_ROUTES } from '../constant';
-import { Link, useNavigate } from 'react-router-dom';
+import {  PATH_URL } from '../constant';
+import { Link } from 'react-router-dom';
 
-const ForgotPassword = () => {
+const ForgotPasswordForm = (props) => {
+    const{onSubmitHandler, isSeller} = props;
+
     const [email,setEmail] = useState('');
     const [error,setError] = useState('');
 
     const validateEmail = isEmailValid(email);
-    const {showToast} = useToast();
-    const navigate = useNavigate();
-
    
-    
+
     const handleSubmit= async(e)=>{
         e.preventDefault();
         if(!validateEmail){
             setError('Enter valid email')
         }else{
-            try {
-               const response = await axiosInstance.post(`${POST_ROUTES.FORGOT_PASSWORD}`,{email});
-               if(response.data.success){
-                    showToast("A password reset link will be sent to this email if an account is registered under it.",'success');
-                    setError('')
-                    navigate(PATH_URL.SIGN_IN);
-               }
-               
-            } catch (error) {
-                if(error){
-                    showToast("A password reset link will be sent to this email if an account is registered under it.",'success')
-                    navigate(PATH_URL.SIGN_IN);
-                    setError('');
-                }
-            }
-            
+           onSubmitHandler(email)
         }
 
     }
@@ -65,7 +48,7 @@ const ForgotPassword = () => {
 
                 <div className="flex justify-between mt-6">
                     <Link 
-                        to={PATH_URL.SIGN_IN}
+                        to={isSeller ? PATH_URL.SELL.LOG_IN : PATH_URL.SIGN_IN }
                         className="w-full md:w-auto px-4 py-1 text-xl font-medium text-gray-900 rounded-lg border-2 border-neutral  "
                     >
                         Back
@@ -83,4 +66,4 @@ const ForgotPassword = () => {
     );
 }
 
-export default ForgotPassword;
+export default ForgotPasswordForm;

@@ -2,7 +2,8 @@ import React,{useState} from 'react';
 import { validateAddressForm } from '../../../utils/validateForms';
 import OpenAccount from '../../../components/OpenAccount';
 import { Link, useNavigate } from 'react-router-dom';
-import { PATH_URL } from '../../../constant';
+import { axiosInstance, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
+import { useToast } from '../../../utils/ToastContext';
 
 
 
@@ -22,6 +23,7 @@ const CreateAccount = () => {
     const [isChecked, setIsChecked] = useState(false);
 
     const navigate =  useNavigate();
+    const {showToast} = useToast();
 
     // Validates the form data for the address section
     const validateForm = (addressData) =>{
@@ -54,16 +56,27 @@ const CreateAccount = () => {
     };
 
   
-    const handleSubmit =(e)=>{
+    const handleSubmit =async(e)=>{
         e.preventDefault();
         const isValid = validateForm(addressData);
-        // Merge the open account and address data
-        if(isValid){
-            const formData = {...openAccountData, ...addressData};
-            localStorage.clear();
-            navigate(PATH_URL.SELL.LOG_IN)
-            console.log(formData);   
+        let formData;
+       
+        try {
+            if(isValid){
+                formData = {...openAccountData, ...addressData};
+            
+                const response = await axiosInstance.post(POST_ROUTES_SHOP.CREATE_ACCOUNT,{formData});
+
+                if(response.data.success){
+                    showToast('Account created Successfully', 'success');
+                    localStorage.clear();
+                    navigate(PATH_URL.SELL.LOG_IN);
+                }
+            }
+        } catch (error) {
+            showToast(error.response.data.error, 'error'); 
         }
+       
     }
     
     return (

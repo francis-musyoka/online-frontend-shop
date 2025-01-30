@@ -10,8 +10,8 @@ const ToastProvider = ({ children }) => {
     const showToast = (message, type) => {
         setToast({ message, type });
         setTimeout(() => {
-            setToast(null); // Hide toast after 3 seconds
-        }, 5000);
+            setToast(null); 
+        }, 6000);
     };
     
     return (

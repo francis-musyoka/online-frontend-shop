@@ -10,7 +10,7 @@ const Layout = () => {
         <div className='bg-tertiary '>
             <div className=" flex  p-3">
                 <div className="items-center ml-auto">
-                    <Link to={PATH_URL.SELL.CREATE_BUSINESS_ACCOUNT} className="text-secondary hover:underline">
+                    <Link to={PATH_URL.SELL.LOG_IN}  target='_blank' className="text-secondary hover:underline ">
                         Open Shop
                     </Link>
                 </div>

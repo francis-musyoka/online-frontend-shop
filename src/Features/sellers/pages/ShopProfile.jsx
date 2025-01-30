@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { validateAddressForm ,validate} from '../../../utils/validateForms';
 import Button from '../../../components/Button';
+import { useShopAuth } from '../../../utils/ShopAuthContext';
+import { axiosInstance, POST_ROUTES_SHOP } from '../../../constant';
+import { useToast } from '../../../utils/ToastContext';
 
 
 
@@ -16,33 +19,60 @@ const ShopProfile = () => {
         zipCode: "",
     });
 
+    const {shopProfile} = useShopAuth();
+    const {showToast} = useToast();
+
+    useEffect(() => {
+        if (shopProfile) {
+            setFormData((prev) => ({
+                ...prev, 
+                email: shopProfile.email || "",
+                phoneNumber: shopProfile.businessNumber || "+254",
+                shopName: shopProfile.businessName|| "",
+                addressLine1: shopProfile.addressLine1 || "",
+                addressLine2: shopProfile.addressLine2 || "",
+                city: shopProfile.city || "",
+                state: shopProfile.state || "",
+                zipCode: shopProfile.zipCode || "",
+            }));
+        }
+    }, [shopProfile]);;
+
     const [formErrors,setFormErrors] = useState({});
 
     const handleChange = (e)=>{
         const {value,name }= e.target;
         setFormData({...formData,[name]: value})
-    }
+    };
 
     const validateForm = (formData)=>{
         const result1 = validate(formData);
         const result2 = validateAddressForm(formData);
         const errors = {...result1, ...result2};
         setFormErrors(errors);
-        console.log(errors);
         
         return Object.keys(errors).length < 1;
     }
 
 
-    const handleSubmit =(e)=>{
+    const handleSubmit =async(e)=>{
         e.preventDefault();
 
         const isValid = validateForm(formData);
-        
+     
         if(isValid){
-            alert("Do you what to make changes")
-            console.log(formData);
-            
+            const confirm = window.confirm("Do you what to make changes")   
+            try {
+                if(confirm){
+                    const response = await axiosInstance.post(POST_ROUTES_SHOP.UPDATE_SHOP_PROFILR(shopProfile.id), {formData});
+                    if(response.data.success){
+                        showToast('Shop profile updated successfully', 'success');
+                    }
+                }
+            } catch (error) {
+                console.log(error.response.data.error);
+                showToast(error.response.data.error)
+            };
         }
         
     }

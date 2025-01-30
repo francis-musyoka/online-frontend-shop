@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { SlMenu } from "react-icons/sl";
 import { RiListView, RiArrowDownSLine } from "react-icons/ri";
 import { HiOutlineShoppingBag } from "react-icons/hi";
@@ -8,6 +8,7 @@ import { FaBullhorn, FaGift } from "react-icons/fa";
 import { FiUsers, FiLogOut } from "react-icons/fi";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { PATH_URL } from "../../../constant";
+import { useShopAuth } from "../../../utils/ShopAuthContext";
 
 
 const SellDashBoard = () => {
@@ -15,6 +16,11 @@ const SellDashBoard = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const {logOut} = useShopAuth();
+
+  const handleClick =()=>{
+    logOut();
+  }
 
   return (
     <div className="bg-tertiary min-h-screen">
@@ -149,13 +155,13 @@ const SellDashBoard = () => {
                             </Link>
                         </li>
                         <li>
-                            <Link
-                            to="#"
+                            <NavLink
+                            onClick={handleClick}
                             className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
                             <FiLogOut className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
                             <span className="flex-1 ms-3 whitespace-nowrap">Log Out</span>
-                            </Link>
+                            </NavLink>
                         </li>
                     </ul>
                 </div>

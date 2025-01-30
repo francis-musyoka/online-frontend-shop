@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { validateProductForm } from '../../../utils/validateForms';
+import { axiosInstance, GET_ROUTES_SHOP } from '../../../constant';
 
 
 const ProductForm = (props) => {
-    const {isEditing,onSubmit} = props
+    const {isEditing,onSubmit} = props;
+    const[category, setCategory] = useState([])
     const [product, setProduct] = useState({
         productName: '',
         description: '',
@@ -11,16 +13,28 @@ const ProductForm = (props) => {
         price: '',
         quantity: '',
         image: [],
+        previewImages:[],
         sku: '',
         brand: '',
         condition: '',
-        discount: '',
+        discount: 0,
         status: '',
         dimensions: '',
         tags: '',
         rating: 0,
         keyFeatures: '',
     });
+
+    useEffect(()=>{
+        const fetchCategories = async()=>{
+            const response = await axiosInstance.get(GET_ROUTES_SHOP.GET_ALL_CATEGORIES)
+            if(response.data.success){
+                setCategory(response.data.categories);
+            }
+        }
+        fetchCategories();
+    },[]);
+    
     const [formErrors, setFormErrors] = useState({})
 
     const handleChange = (e) => {
@@ -31,20 +45,29 @@ const ProductForm = (props) => {
         });
     };
 
+
+
     const handleImageChange = (e) => {
-        const files = Array.from(e.target.files); // Convert FileList to Array
-        const imageUrls = files.map((file) => URL.createObjectURL(file)); // Create Object URLs for the selected images
+         // Convert FileList to Array
+        const files = Array.from(e.target.files);
+
+        // Create  URLs for the selected images
+        const imageUrls = files.map((file) => URL.createObjectURL(file)); 
+
         setProduct((prevState) => ({
             ...prevState,
-            image: [...prevState.image, ...imageUrls], // Append new images to the state
+            image: [...prevState.image, ...files], // Store actual files for backend
+            previewImages: [...prevState.previewImages, ...imageUrls], // Store preview images for UI
         }));
     };
     
     const handleRemoveImage = (index) => {
         const updatedImages = product.image.filter((_, i) => i !== index); // Remove image at specified index
+        const updatedPreviewImages = product.image.filter((_, i) => i !== index);
         setProduct({
             ...product,
             image: updatedImages, // Update image state
+            previewImages:updatedPreviewImages
         });
     };
 
@@ -133,10 +156,10 @@ const ProductForm = (props) => {
                         onChange={handleChange}
                         className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="" disabled hidden>Select Status</option>
-                        <option value="watches">Watches</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="smartphones">Smartphones</option>
+                        <option value="" disabled hidden>Select Category</option>
+                        {category.map(category=>(
+                            <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
                     </select>
                     {formErrors.category && <span className="text-red-700 text-xs">{formErrors.category}</span>}
                 </div>
@@ -153,6 +176,7 @@ const ProductForm = (props) => {
                             id="price"
                             name="price"
                             type="number"
+                            required min="0" 
                             value={product.price}
                             onChange={handleChange}
     
@@ -170,6 +194,7 @@ const ProductForm = (props) => {
                             id="quantity"
                             name="quantity"
                             type="number"
+                            required min="0"
                             value={product.quantity}
                             onChange={handleChange}
     
@@ -231,6 +256,7 @@ const ProductForm = (props) => {
                             id="discount"
                             name="discount"
                             type="number"
+                            required min="0" max="100"
                             value={product.discount}
                             onChange={handleChange}
                             className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -300,10 +326,10 @@ const ProductForm = (props) => {
                         />
                         {formErrors.image && <span className="text-red-700 text-xs">{formErrors.image}</span>}
                         
-                        {product.image.length > 0 && (
+                        {product.previewImages.length > 0 && (
                             <>
                                 <div className="flex space-x-4 mt-4">
-                                    {product.image.map((image, index) => (
+                                    {product.previewImages.map((image, index) => (
                                         <div key={index} className="relative">
                                             <img
                                                 src={image}

@@ -46,7 +46,7 @@ const AuthProvider = ({children}) => {
     const logOutAction = async()=>{
         const response = await axiosInstance.get(`${GET_ROUTES.LOGOUT}`);
         try {
-            if(response.data.success === true){
+            if(response.data.success){
                 setToken('');
                 setUser('')
                 sessionStorage.clear();
@@ -67,13 +67,15 @@ const AuthProvider = ({children}) => {
             {children}
         </AuthContext.Provider>
     );
-}
+};
 
 export default AuthProvider;
 
 export const useAuth = ()=>{
     return useContext(AuthContext);
 };
+
+
 
 
 

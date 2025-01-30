@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
-import {  } from '../utils';
-import { useToast } from '../utils/ToastContext';
-import { axiosInstance, PATH_URL, POST_ROUTES } from '../constant';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useHooks } from '../hooks/useHooks';
 import { validateChangePassword } from '../utils/validateForms';
 
-const ResetPassword = () => {
+const ResetPasswordForm = (props) => {
+    const {onSubmitHandler} =props;
     const [password,setPassword] = useState('');
     const [confirmPassword,setConfirmPassword] = useState('');
     const [formError,setFormError] = useState({});
 
     const {status:showPassword,handleStatus:handleClick} = useHooks();
-    const {showToast} = useToast();
-    const navigate = useNavigate();
-    const {link} = useParams();
+    
+
     const validateForm = ()=>{
-        const currentPassword = null
-        console.log(confirmPassword);
-        
+        const currentPassword = null;
         const error = validateChangePassword(password,confirmPassword,currentPassword);
         console.log(error);
         setFormError(error)
@@ -28,20 +22,9 @@ const ResetPassword = () => {
     const handleSubmit= async(e)=>{
         e.preventDefault();
         const isValid = validateForm();
-        console.log(isValid);
         
         if(isValid){
-            console.log('DONE'); 
-            try {
-               const response = await axiosInstance.post(`${POST_ROUTES.RESET_PASSWORD(link)}`,{password,confirmPassword});
-               if(response.data.success){
-                    showToast("Password reset successfully",'success');
-                    navigate(PATH_URL.SIGN_IN);
-               }
-               
-            } catch (error) {
-                showToast(error.response.data.error)
-            }; 
+           onSubmitHandler(password,confirmPassword) 
         };
     }
 
@@ -105,4 +88,4 @@ const ResetPassword = () => {
     );
 }
 
-export default ResetPassword;
+export default ResetPasswordForm;

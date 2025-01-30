@@ -73,7 +73,7 @@ const SignInForm = (props) => {
                         <label for="show-password" class="ml-2 text-sm text-gray-600 dark:text-gray-400">Show Password</label>
                     </div>
                     <div class="flex justify-end mb-6">
-                        <Link to={`${PATH_URL.FORGOT_PASSWORD}`} class="text-sm text-blue-600 hover:underline dark:text-blue-400">Forgot Password?</Link>
+                        <Link to={isSeller ? PATH_URL.SELL.FORGOT_PASSWORD : PATH_URL.FORGOT_PASSWORD} class="text-sm text-blue-600 hover:underline dark:text-blue-400">Forgot Password?</Link>
                     </div>
                     <div className="flex justify-between">
                         <button

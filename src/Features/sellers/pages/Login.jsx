@@ -1,15 +1,13 @@
 import React, { } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PATH_URL } from '../../../constant';
 import SignInForm from '../../../components/SignInForm';
+import { useShopAuth } from '../../../utils/ShopAuthContext';
+
 
 const SignIn = () => {
-    
-    const navigate = useNavigate();  
+   const {logIn} = useShopAuth();
 
     const handleSubmit =(formData)=>{
-        console.log(formData);
-        navigate(`${PATH_URL.SELL.DASHBOARD}`)   
+        logIn(formData)  
     }
 
     return (
