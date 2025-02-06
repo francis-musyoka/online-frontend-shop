@@ -140,11 +140,13 @@ export const validateProductForm = (formData) => {
         errors.keyFeatures = 'Add key features'
     }
     
-    if(!formData.price.trim() || formData.price <= 0){
+    if( formData.price < 0){
         errors.price = 'Price must be greater than 0'
     }
 
-    if(!formData.quantity.trim() || formData.quantity <= 0){
+    console.log(formData.quantity);
+    
+    if(formData.quantity < 0){
         errors.quantity = 'Quantity must be greater than 0'
     }
 

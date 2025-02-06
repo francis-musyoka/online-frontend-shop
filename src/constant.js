@@ -9,6 +9,7 @@ const PATH_URL = {
     CART: '/cart',
     FORGOT_PASSWORD: '/forgotpassword',
     RESETPASSWORD: "/reset-password/:link", 
+    PRODUCT_DETAILS: '/:product-name',
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
@@ -30,12 +31,13 @@ const PATH_URL = {
 };
 
 
-// apiRoutes.js
+// Customer Apis
 const POST_ROUTES = {
     SIGN_UP: '/signup',
     SIGN_IN: '/signin',
     FORGOT_PASSWORD: '/forgotpassword',
     RESET_PASSWORD:(link) => `/resetpassword/${link}`,
+    ADD_AND_REMOVE_WISHLIST:(productId) => `/add/remove/${productId}`
 };
 
 const GET_ROUTES = {
@@ -43,39 +45,49 @@ const GET_ROUTES = {
     GET_USER_PROFILE: '/get-user-profile',
     LOGOUT: `/logout`,
     GET_ALL_USERS: '/get-all-users',
-    
+    GET_ALL_PRODUCTS: `all/products`,
+    ChECK_IS_IN_WISHLIST:(productId) =>`/check/product/${productId}`,
+    GET_PRODUCTS_IN_WISHLIST: `/wishlist/product`
 };
   
-  const PATCH_ROUTES = {
-    UPDATE_USER_PROFILE: (id) => `/update-user-profile/${id}`,
-    UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
-  };
+const PATCH_ROUTES = {
+  UPDATE_USER_PROFILE: (id) => `/update-user-profile/${id}`,
+  UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
+};
 
-  const POST_ROUTES_SHOP ={
-    CREATE_ACCOUNT: `/create-shop`,
-    LOG_IN: `/login`,  
-    FORGOT_PASSWORD: `/shop/forgotpassword`,
-    LOG_OUT: `/shop/logout`,
-    RESET_PASSWORD:(link) => `/resetshoppassword/${link}`,
-    UPDATE_SHOP_PROFILR:(id) => `/update-shop-profile/${id}`,
-    ADD_CATEGORY: '/add-category',
-    ADD_PRODUCTS: '/add-product'
 
-  }
+// Shop apis
+const POST_ROUTES_SHOP ={
+  CREATE_ACCOUNT: `/create-shop`,
+  LOG_IN: `/login`,  
+  FORGOT_PASSWORD: `/shop/forgotpassword`,
+  LOG_OUT: `/shop/logout`,
+  RESET_PASSWORD:(link) => `/resetshoppassword/${link}`,
+  UPDATE_SHOP_PROFILR:(id) => `/update-shop-profile/${id}`,
+  ADD_CATEGORY: '/add-category',
+  ADD_PRODUCTS: '/add-product'
+
+}
   
-  const GET_ROUTES_SHOP ={
-    GET_SINGLE_SHOP:(id) =>`/get-single-shop/${id}`,
-    GET_ALL_SHOPS: `/get-all-shops`,
-    GET_SHOP_PROFILE: `/get-shop-profile`,
-    GET_ALL_CATEGORIES: '/get-all-category',
-    GET_SHOP_PRODUCT: '/shop/product'
-  }
+const GET_ROUTES_SHOP ={
+  GET_SINGLE_SHOP:(id) =>`/get-single-shop/${id}`,
+  GET_ALL_SHOPS: `/get-all-shops`,
+  GET_SHOP_PROFILE: `/get-shop-profile`,
+  GET_ALL_CATEGORIES: '/get-all-category',
+  GET_SHOP_PRODUCT: '/shop/product'
   
+}
+
+const PUT_ROUTES_SHOP ={
+  EDIT_PRODUCT:(id) => `/shop/edit/product/${id}`
+}
 
  // Axios instance
- const axiosInstance = axios.create({
+const axiosInstance = axios.create({
   baseURL: "http://localhost:5000",
   withCredentials: true 
 });
 
-export {PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES , POST_ROUTES_SHOP, GET_ROUTES_SHOP, axiosInstance};
+const BASEURL = 'http://localhost:5000'
+
+export {PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES , POST_ROUTES_SHOP, GET_ROUTES_SHOP, PUT_ROUTES_SHOP,BASEURL, axiosInstance};

@@ -4,26 +4,28 @@ import { axiosInstance, GET_ROUTES_SHOP } from '../../../constant';
 
 
 const ProductForm = (props) => {
-    const {isEditing,onSubmit} = props;
+    const {isEditing,onSubmit, selectedProduct} = props;
     const[category, setCategory] = useState([])
     const [product, setProduct] = useState({
         productName: '',
-        description: '',
+        description:   '',
         category: '',
-        price: '',
-        quantity: '',
+        price:  '',
+        quantity:  '',
         image: [],
         previewImages:[],
         sku: '',
-        brand: '',
-        condition: '',
-        discount: 0,
+        brand:  '',
+        condition:  '',
+        discount:0,
         status: '',
         dimensions: '',
         tags: '',
         rating: 0,
-        keyFeatures: '',
+        keyFeatures:  '',
     });
+    const [formErrors, setFormErrors] = useState({})
+
 
     useEffect(()=>{
         const fetchCategories = async()=>{
@@ -35,7 +37,16 @@ const ProductForm = (props) => {
         fetchCategories();
     },[]);
     
-    const [formErrors, setFormErrors] = useState({})
+     useEffect(() => {
+      if (selectedProduct) {
+        setProduct({
+            ...selectedProduct,
+            category: selectedProduct.categoryId
+        });
+      }
+    }, [selectedProduct]);
+
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -156,7 +167,7 @@ const ProductForm = (props) => {
                         onChange={handleChange}
                         className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
-                        <option value="" disabled hidden>Select Category</option>
+                        <option value={''} disabled hidden>Select Category</option>
                         {category.map(category=>(
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
@@ -176,7 +187,6 @@ const ProductForm = (props) => {
                             id="price"
                             name="price"
                             type="number"
-                            required min="0" 
                             value={product.price}
                             onChange={handleChange}
     
@@ -194,7 +204,6 @@ const ProductForm = (props) => {
                             id="quantity"
                             name="quantity"
                             type="number"
-                            required min="0"
                             value={product.quantity}
                             onChange={handleChange}
     
@@ -311,7 +320,10 @@ const ProductForm = (props) => {
                     </div>
 
                 </div>
-                <div>
+
+                {
+                    !isEditing &&(
+                        <div>
                         <label className="block text-gray-700">
                             Product Images
                             <span className="text-red-500">*</span>
@@ -352,33 +364,36 @@ const ProductForm = (props) => {
                             </>
                         )}
                     </div> 
-                    { isEditing ?(
-                        <>
-                            <div className="flex justify-between">
-                                <button
-                                    type="button"
-                                    onClick={''}
-                                    className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </>
-                    ):(
-                        <>
-                            <div className="mt-6">
-                                <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
-                                Add Product
-                                </button>
-                            </div>
-                        </>
-                    )}             
+                    )
+                }      
+               
+                { isEditing ?(
+                    <>
+                        <div className="flex justify-between">
+                            <button
+                                type="button"
+                                onClick={''}
+                                className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </>
+                ):(
+                    <>
+                        <div className="mt-6">
+                            <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
+                            Add Product
+                            </button>
+                        </div>
+                    </>
+                )}             
                 
             </form>
         </div>

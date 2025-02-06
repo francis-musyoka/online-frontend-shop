@@ -28,6 +28,7 @@ import ResetPassword from '../src/Features/customers/pages/ResetPassword';
 import ForgotPasswordShop from './Features/sellers/pages/ForgotPasswordShop';
 import ResetShopPassword from './Features/sellers/ResetShopPassword';
 import ShopRequireAuth from './Features/sellers/components/ShopRequireAuth';
+import ProductDetails from './Features/customers/pages/ProductDetails';
 
 function App() {
 
@@ -51,6 +52,7 @@ function App() {
                                 <Route path={PATH_URL.ACCOUNT.FAVOURITES} element={<Favourite />} />
                             </Route>
                         </Route>
+                        <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
                     </Route>
                     <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
                     <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>

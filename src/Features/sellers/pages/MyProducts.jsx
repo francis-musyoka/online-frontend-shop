@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance, GET_ROUTES_SHOP, PATH_URL } from '../../../constant';
+import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL } from '../../../constant';
 
 
 const MyProducts = () => {
 
     const [product,setProduct] = useState([]);
-
+   
     useEffect(()=>{
         const getProducts = async()=>{
             const {data} = await axiosInstance.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
@@ -18,6 +18,8 @@ const MyProducts = () => {
         getProducts();
     },[setProduct]);
 
+ 
+  
 
     return (
         <div>
@@ -43,18 +45,21 @@ const MyProducts = () => {
                                         Price
                                     </th>
                                     <th scope="col" className="px-6 py-3">
+                                       Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
                                         Action
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    product.map((product,index)=>(
-                                        <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    product.map((product)=>(
+                                        <tr key={product.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             <td className="p-4">
-                                                <img src={product.image && product.image.length > 0 ?`http://localhost:5000${product.image[0]}` : null} className="w-10 md:w-32 max-w-20 max-h-20" alt="Apple Watch"/>
+                                                <img src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null} className="w-10 md:w-32 max-w-20 max-h-20" alt="Apple Watch"/>
                                             </td>
-                                            <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
+                                            <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white " >
                                                 {product.productName}
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
@@ -64,10 +69,13 @@ const MyProducts = () => {
                                             {product.Category.name}
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                                $  {product.price}
+                                                Ksh  {product.price.toLocaleString()}
+                                            </td>
+                                            <td className={ product.quantity ? ' text-green-400' : "text-red-500" `px-6 py-4 font-semibold  dark:text-white`}>
+                                                {product.quantity ? 'Avaliable' : "Out Of Stock"}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} className=" text-lime-400 px-4 py-2 hover:underline">
+                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} state={{product:product}} className=" text-lime-400 px-4 py-2 hover:underline">
                                                     Edit
                                                 </Link>
                                                 <button className="font-medium px-4 py-2 text-red-600 dark:text-red-500 hover:underline">
