@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { validateProductForm } from '../../../utils/validateForms';
 import { axiosInstance, GET_ROUTES_SHOP } from '../../../constant';
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import {  EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+
+
 
 
 const ProductForm = (props) => {
+    const [editorStateDescription, setEditorStateDescription] = useState(EditorState.createEmpty());
+    const [editorStateKeyFeatures, setEditorStateKeyFeatures] = useState(EditorState.createEmpty());
     const {isEditing,onSubmit, selectedProduct} = props;
     const[category, setCategory] = useState([])
     const [product, setProduct] = useState({
@@ -27,6 +34,7 @@ const ProductForm = (props) => {
     const [formErrors, setFormErrors] = useState({})
 
 
+
     useEffect(()=>{
         const fetchCategories = async()=>{
             const response = await axiosInstance.get(GET_ROUTES_SHOP.GET_ALL_CATEGORIES)
@@ -36,15 +44,21 @@ const ProductForm = (props) => {
         }
         fetchCategories();
     },[]);
+
     
-     useEffect(() => {
-      if (selectedProduct) {
-        setProduct({
-            ...selectedProduct,
-            category: selectedProduct.categoryId
-        });
-      }
-    }, [selectedProduct]);
+    
+    useEffect(() => {
+    if (selectedProduct) {
+        const descriptionState = convertFromRaw(JSON.parse(selectedProduct.description));
+        const descriptionEditorState = EditorState.createWithContent(descriptionState);
+        const keyFeatuersState = convertFromRaw(JSON.parse(selectedProduct.keyFeatures));
+        const keyFeatuersEditorState = EditorState.createWithContent(keyFeatuersState);
+
+        setProduct({...selectedProduct, category: selectedProduct.categoryId});
+        setEditorStateDescription(descriptionEditorState);
+        setEditorStateKeyFeatures(keyFeatuersEditorState)
+    }
+}, [selectedProduct]);
 
     
 
@@ -55,6 +69,19 @@ const ProductForm = (props) => {
             [name]: value,
         });
     };
+
+    const handleDescriptionChange = (state)=>{
+        setEditorStateDescription(state);
+        const content = JSON.stringify(convertToRaw(state.getCurrentContent()));
+        handleChange({target:{name:'description', value:content}})
+    }
+
+    const handleKeyFeaturesnChange = (state)=>{
+        setEditorStateKeyFeatures(state);
+        const content = JSON.stringify(convertToRaw(state.getCurrentContent()));
+        handleChange({target:{name:'keyFeatures', value:content}})
+    }
+
 
 
 
@@ -123,18 +150,50 @@ const ProductForm = (props) => {
                 </div>
 
                 <div>
+
                     <label htmlFor="description" className="block text-gray-700 font-medium">
-                        Description
-                        <span className="text-red-500">*</span>
+                        Description <span className="text-red-500">*</span>
                     </label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={product.description}
-                        onChange={handleChange}
-                        rows="4"
-                        className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    ></textarea>
+                    <div className="mt-2 border border-gray-300 rounded-md w-full">
+                    <Editor
+            
+                        editorState={editorStateDescription}
+                        onEditorStateChange={handleDescriptionChange}
+                        wrapperClassName="border border-gray-300 rounded-md"
+                        editorClassName="p-3 min-h-[100px]"
+                        toolbarClassName="border-b border-gray-300"
+                        toolbar={{
+                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'image', 'remove', 'history'],
+                            inline: {
+                                inDropdown: false,
+                                className: undefined,
+                                component: undefined,
+                                dropdownClassName: undefined,
+                                options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace', 'superscript', 'subscript'],
+                            },
+                            blockType: {
+                                inDropdown: true,
+                                options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                                className: undefined,
+                                component: undefined,
+                                dropdownClassName: undefined,
+                              },
+                              fontSize: {
+                                options: [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+                                className: undefined,
+                                component: undefined,
+                                dropdownClassName: undefined,
+                              },
+                              fontFamily: {
+                                options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+                                className: undefined,
+                                component: undefined,
+                                dropdownClassName: undefined,
+                              },
+                        }}
+                    />
+
+                    </div>
                     {formErrors.description && <span className="text-red-700 text-xs">{formErrors.description}</span>}
                 </div>
   
@@ -143,15 +202,46 @@ const ProductForm = (props) => {
                         Key Features
                         <span className="text-red-500">*</span>
                     </label>
-                    <textarea
-                        id="keyFeatures"
-                        name="keyFeatures"
-                        value={product.keyFeatures}
-                        onChange={handleChange}
-                        placeholder="Enter key features separated by commas."
-                        rows="4"
-                        className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    ></textarea>
+                    <div className="mt-2 border border-gray-300 rounded-md w-full">
+                        <Editor
+                
+                            editorState={editorStateKeyFeatures}
+                            onEditorStateChange={handleKeyFeaturesnChange}
+                            wrapperClassName="border border-gray-300 rounded-md"
+                            editorClassName="p-3 min-h-[100px]"
+                            toolbarClassName="border-b border-gray-300"
+                            toolbar={{
+                                options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'image', 'remove', 'history'],
+                                inline: {
+                                    inDropdown: false,
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace', 'superscript', 'subscript'],
+                                },
+                                blockType: {
+                                    inDropdown: true,
+                                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                },
+                                fontSize: {
+                                    options: [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                },
+                                fontFamily: {
+                                    options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                },
+                            }}
+                        />
+
+                    </div>
                     {formErrors.keyFeatures && <span className="text-red-700 text-xs">{formErrors.keyFeatures}</span>}
                 </div>
 
@@ -285,9 +375,9 @@ const ProductForm = (props) => {
                             className="mt-2 p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                              <option value="" disabled hidden>Select Status</option>
-                            <option value="available">Available</option>
-                            <option value="out-of-stock">Out of Stock</option>
-                            <option value="coming-soon">Coming Soon</option>
+                            <option value="Available">Available</option>
+                            <option value="Out-of-Stock">Out-of-Stock</option>
+                            <option value="Coming-Soon">Coming-Soon</option>
                         </select>
                         {formErrors.status && <span className="text-red-700 text-xs">{formErrors.status}</span>}
                     </div>

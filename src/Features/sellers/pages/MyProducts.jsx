@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL } from '../../../constant';
+import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
+import { useToast } from '../../../utils/ToastContext';
 
 
 const MyProducts = () => {
 
     const [product,setProduct] = useState([]);
-   
+    const {showToast} = useToast();
+
     useEffect(()=>{
         const getProducts = async()=>{
             const {data} = await axiosInstance.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
@@ -17,6 +19,19 @@ const MyProducts = () => {
         };
         getProducts();
     },[setProduct]);
+
+
+    const handleDelete = async(productId)=>{
+        try {
+            const response = await axiosInstance.post(POST_ROUTES_SHOP.DELETE_PRODUCT(productId));
+            if(response.status===204){
+                showToast('Product delete successfully', 'success')
+            }
+        } catch (error) {
+            showToast(error.response.data.error, 'error')
+        };
+    };
+    
 
  
   
@@ -71,15 +86,18 @@ const MyProducts = () => {
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
                                                 Ksh  {product.price.toLocaleString()}
                                             </td>
-                                            <td className={ product.quantity ? ' text-green-400' : "text-red-500" `px-6 py-4 font-semibold  dark:text-white`}>
-                                                {product.quantity ? 'Avaliable' : "Out Of Stock"}
+                                            <td className={`${product.status === 'Available' ? 'text-green-400 dark:text-green-300' : product.status === "Out-of-Stock" ? 'text-red-500 dark:text-red-400'  : 'text-yellow-500 dark:text-yellow-400' } px-6 py-4 font-semibold`}
+                                                >
+                                                {product.status}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} state={{product:product}} className=" text-lime-400 px-4 py-2 hover:underline">
+                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} state={{productId:product.id}} className=" text-lime-400 px-4 py-2 hover:underline">
                                                     Edit
                                                 </Link>
-                                                <button className="font-medium px-4 py-2 text-red-600 dark:text-red-500 hover:underline">
-                                                    Remove
+                                                <button 
+                                                    onClick={()=>handleDelete(product.id)}
+                                                    className="font-medium px-4 py-2 text-red-600 dark:text-red-500 hover:underline">
+                                                    Delete
                                                 </button>
                                             </td>
                                         </tr>

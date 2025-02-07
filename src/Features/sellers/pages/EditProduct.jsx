@@ -1,23 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductForm from '../components/ProductForm';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { axiosInstance, PATH_URL, PUT_ROUTES_SHOP } from '../../../constant';
+import { axiosInstance, GET_ROUTES_SHOP, PATH_URL, PUT_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../utils/ToastContext';
 
 
 const EditProduct = () => {
     const location = useLocation();
-    const{product} = location.state;
+    const{productId} = location.state;
+    const [product,setProduct] = useState();
       
 
     const {showToast} = useToast();
     const navigate = useNavigate();
 
+    useEffect(()=>{
+        if(productId){
+            const getProduct = async()=>{
+                const response  = await axiosInstance.get(GET_ROUTES_SHOP.CURRENT_PRODUCT_ON_EDIT(productId)); 
+                if(response.data.success){
+                    setProduct(response.data.product);
+                } 
+            }
+            getProduct();
+        }
+    },[productId]);
+
 
     const handleSubmit = async(formData)=>{
         
         try {
-            const response= await axiosInstance.put(PUT_ROUTES_SHOP.EDIT_PRODUCT(product.id),{formData});
+            const response= await axiosInstance.put(PUT_ROUTES_SHOP.EDIT_PRODUCT(productId),{formData});
             if(response.data.success){
                 showToast("Product updated successfully", 'success')
                 navigate(PATH_URL.SELL.MY_PRODUCTS)

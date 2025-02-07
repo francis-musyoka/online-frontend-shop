@@ -10,6 +10,9 @@ const AddProduct = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async(formData) => {
+
+        console.log(formData);
+        
         
         try {
             const response = await axiosInstance.post(POST_ROUTES_SHOP.ADD_PRODUCTS,formData,{

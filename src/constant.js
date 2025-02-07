@@ -47,7 +47,8 @@ const GET_ROUTES = {
     GET_ALL_USERS: '/get-all-users',
     GET_ALL_PRODUCTS: `all/products`,
     ChECK_IS_IN_WISHLIST:(productId) =>`/check/product/${productId}`,
-    GET_PRODUCTS_IN_WISHLIST: `/wishlist/product`
+    GET_PRODUCTS_IN_WISHLIST: `/wishlist/product`,
+    GET_SINGLE_PRODUCT:(id) => `/single/product/${id}`
 };
   
 const PATCH_ROUTES = {
@@ -65,7 +66,8 @@ const POST_ROUTES_SHOP ={
   RESET_PASSWORD:(link) => `/resetshoppassword/${link}`,
   UPDATE_SHOP_PROFILR:(id) => `/update-shop-profile/${id}`,
   ADD_CATEGORY: '/add-category',
-  ADD_PRODUCTS: '/add-product'
+  ADD_PRODUCTS: '/add-product',
+  DELETE_PRODUCT:(productId) => `/delete/product/${productId}`
 
 }
   
@@ -74,8 +76,8 @@ const GET_ROUTES_SHOP ={
   GET_ALL_SHOPS: `/get-all-shops`,
   GET_SHOP_PROFILE: `/get-shop-profile`,
   GET_ALL_CATEGORIES: '/get-all-category',
-  GET_SHOP_PRODUCT: '/shop/product'
-  
+  GET_SHOP_PRODUCT: '/shop/product',
+  CURRENT_PRODUCT_ON_EDIT:(id) => `/single/product/for/edit/${id}`
 }
 
 const PUT_ROUTES_SHOP ={

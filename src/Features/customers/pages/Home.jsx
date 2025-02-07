@@ -34,7 +34,7 @@ const Home = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
                     {product.map((product) => (
                         <div key={product.id} className="bg-white border rounded-lg shadow-lg overflow-hidden">
-                            <Link to={`/${product.productName}`} state={{productDetails:product}} className="bg-white p-4 flex items-center justify-center">
+                            <Link to={`/${product.productName}`} state={{productDetails: product}} className="bg-white p-4 flex items-center justify-center">
                             <img
                                 className="w-full h-auto object-contain"
                                 src={product.image && product.image.length > 0 ? `http://localhost:5000${product.image[0]}` : null}
@@ -42,7 +42,7 @@ const Home = () => {
                             />
                             </Link>
                             <div className="px-5 pb-5">
-                                <Link to={`/${product.productName}`} state={{productDetails:product}}>
+                                <Link to={`/${product.productName}`} state={{productDetails: product}}>
                                     <h5 className="text-xl font-medium tracking-tight dark:text-neutral mb-2 truncate" title={product.productName}>
                                     {product.productName}
                                     </h5>

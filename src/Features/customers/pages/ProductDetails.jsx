@@ -1,23 +1,49 @@
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
-import {  BASEURL, PATH_URL } from '../../../constant';
-
+import {  axiosInstance, BASEURL, GET_ROUTES, PATH_URL } from '../../../constant';
 import WishlistButton from '../../../components/WishlistButton';
+import DisplayDescription from '../component/DescriptionEditor';
+import KeyFeaturesDisplay from '../component/KeyFeatursEditor';
+
 
 
 const ProductDetails = () => {
+   
+
     const location = useLocation();
     const {productDetails} = location.state;
+    const [product, setProduct] = useState()
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(productDetails.image[0]);
+   
+    // const [productDetails,setProductDetails] = useState()
     
+    // console.log('PRODUCT ID++==>',productId);
+    
+    useEffect(()=>{
+            
+        const getProductDetails = async()=>{
+            const response = await axiosInstance.get(GET_ROUTES.GET_SINGLE_PRODUCT(productDetails.id));
+            console.log(response);
+            if(response.data.success){
+                setProduct(response.data.productDetail);
+                setSelectedImage(response.data.productDetail.image[0])
+                
+            };
+        }
+        getProductDetails();
+      
+    },[productDetails.id,setProduct]);
+
+    console.log("PRODUCT==.>",product);
     
 
     const handleClick =()=>{
         navigate(PATH_URL.CART)
     }
 
+  
     return (
         <div>
             <section className="py-12 sm:py-16"> 
@@ -49,16 +75,16 @@ const ProductDetails = () => {
                         </div>
                         <div className="lg:col-span-2 lg:row-span-2 order-last sm:order-last md:order-first">
                             <div className="flex items-center justify-between">
-                                <h1 className="text-base font-bold text-gray-900 lg:text-2xl">{productDetails.productName}</h1>
-                                <WishlistButton productId={productDetails.id}/>
+                                <h1 className="text-base font-bold text-gray-900 lg:text-2xl">{product.productName}</h1>
+                                <WishlistButton productId={product.id}/>
                             </div>
                             <div className="mt-5 flex items-center space-x-2">
                                 <span className="text-base font-semibold text-gray-700">Brand:</span>
-                                <Link className="text-sm font-medium text-primary hover:underline">{productDetails.brand}</Link>
+                                <Link className="text-sm font-medium text-primary hover:underline">{product.brand}</Link>
                             </div>
                             <div className="mt-10 flex flex-row items-center justify-between border-t border-b py-4 sm:space-x-4 sm:w-full">
                                 <div className="flex items-end">
-                                    <h1 className="text-xl font-bold lg:text-3xl">KSH {productDetails.price.toLocaleString()}</h1>
+                                    <h1 className="text-xl font-bold lg:text-3xl">KSH {product.price.toLocaleString()}</h1>
                                 </div>
                                 <Button label="Add to Cart" variant="primary" size="medium" onClick={handleClick} />
                             </div>
@@ -73,20 +99,19 @@ const ProductDetails = () => {
                     </h1>
                 </div>
                 <div className="mt-4 flow-root sm:mt-12">
-                    <p className="mt-0">{productDetails.description}</p>
+                    <DisplayDescription description={product.description}/>
+                    
                 </div>
                 <div className="border-b border-gray-300 mt-6">
                     <h1 className="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800">
                         Key Features
                     </h1>
                 </div>
-                <ul className="mt-4 flow-root sm:mt-12 list-disc pl-5 text-gray-700">
-                    
-                        <li >{productDetails.keyFeatures}</li>
-                </ul>
+                <div className="mt-4 flow-root sm:mt-12 list-disc pl-5 text-gray-700">
+                    <KeyFeaturesDisplay keyFeatures={product.keyFeatures} />
+                </div>
             </div>
-        
-        </div>
+        </div> 
     );
 }
 
@@ -95,53 +120,3 @@ export default ProductDetails;
 
 
 
-
-
-//   {/* <nav class="flex">
-//       <ol role="list" class="flex items-center">
-//         <li class="text-left">
-//           <div class="-m-1">
-//             <a href="#" class="rounded-md p-1 text-sm font-medium text-gray-600 focus:text-gray-900 focus:shadow hover:text-gray-800"> Home </a>
-//           </div>
-//         </li>
-
-//         <li class="text-left">
-//           <div class="flex items-center">
-//             <span class="mx-2 text-gray-400">/</span>
-//             <div class="-m-1">
-//               <a href="#" class="rounded-md p-1 text-sm font-medium text-gray-600 focus:text-gray-900 focus:shadow hover:text-gray-800"> Products </a>
-//             </div>
-//           </div>
-//         </li>
-
-//         <li class="text-left">
-//           <div class="flex items-center">
-//             <span class="mx-2 text-gray-400">/</span>
-//             <div class="-m-1">
-//               <a href="#" class="rounded-md p-1 text-sm font-medium text-gray-600 focus:text-gray-900 focus:shadow hover:text-gray-800" aria-current="page"> Coffee </a>
-//             </div>
-//           </div>
-//         </li>
-//       </ol>
-//     </nav> */}
-
-
-
-
-
-
-// {/* <div class="lg:col-span-3">
-//                             <div class="border-b border-gray-300">
-//                                 <h1 class="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"> Description </h1>
-//                             </div>
-//                             <div class="mt-4 flow-root sm:mt-12">
-//                                 <p class="mt-0">Amet consectetur adipisicing elit. Optio numquam enim facere. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore rerum nostrum eius facere, ad neque.</p>
-//                             </div>
-//                             <div class="border-b border-gray-300">
-//                                 <h1 class="border-b-2 border-gray-900 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"> Key Features </h1>
-//                             </div>
-//                             <div class="mt-4 flow-root sm:mt-12">
-//                                 <p class="mt-0">Amet consectetur adipisicing elit. Optio numquam enim facere. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolore rerum nostrum eius facere, ad neque.</p>
-//                             </div>
-                          
-//                         </div> */}
