@@ -10,6 +10,7 @@ const PATH_URL = {
     FORGOT_PASSWORD: '/forgotpassword',
     RESETPASSWORD: "/reset-password/:link", 
     PRODUCT_DETAILS: '/:product-name',
+    REVIEWS_DISPLAY: '',
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
@@ -48,7 +49,8 @@ const GET_ROUTES = {
     GET_ALL_PRODUCTS: `all/products`,
     ChECK_IS_IN_WISHLIST:(productId) =>`/check/product/${productId}`,
     GET_PRODUCTS_IN_WISHLIST: `/wishlist/product`,
-    GET_SINGLE_PRODUCT:(id) => `/single/product/${id}`
+    GET_SINGLE_PRODUCT:(id) => `/single/product/${id}`,
+    GET_LIMITTED_PRODUCTS_IN_WHISHLIST: '/wishlist-limitted/product'
 };
   
 const PATCH_ROUTES = {
