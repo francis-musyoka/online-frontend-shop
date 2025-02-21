@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
+import { useToast } from '../../../context/ToastContext';
 
 
 const MyProducts = () => {
@@ -31,11 +31,7 @@ const MyProducts = () => {
             showToast(error.response.data.error, 'error')
         };
     };
-    
-
  
-  
-
     return (
         <div>
             {

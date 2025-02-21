@@ -15,6 +15,10 @@ const AuthProvider = ({children}) => {
     const {showToast} = useToast();
     const navigate = useNavigate();
 
+    const guestId = localStorage.getItem('guestId') || null;
+
+    
+    
     useEffect(()=>{
         if(token){
             const fetchUserProfile =async()=>{
@@ -29,11 +33,12 @@ const AuthProvider = ({children}) => {
 
     const logInAction =async(email,password)=>{
         try {
-            const response = await axiosInstance.post(`${POST_ROUTES.SIGN_IN}`,{email,password})
+            const response = await axiosInstance.post(`${POST_ROUTES.SIGN_IN}`,{email,password,guestId})
             if(response.data.success){
                 setToken(response.data.token)
                 sessionStorage.setItem('token',JSON.stringify(response.data.token))
-                showToast('Login Successfully', 'success')
+                showToast('Login Successfully', 'success');
+                localStorage.clear();
                 navigate(PATH_URL.ACCOUNT.BASE);
             };
             

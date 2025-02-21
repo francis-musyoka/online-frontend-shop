@@ -2,7 +2,7 @@ import React from 'react';
 import ResetPasswordForm from '../../../components/ResetPasswordForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { axiosInstance, PATH_URL, POST_ROUTES } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
+import { useToast } from '../../../context/ToastContext';
 
 const ResetPassword = () => {
 

@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import SignInForm from '../../../components/SignInForm';
-import { useShopAuth } from '../../../utils/ShopAuthContext';
+import { useShopAuth } from '../../../context/ShopAuthContext';
 
 
 const SignIn = () => {

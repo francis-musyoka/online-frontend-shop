@@ -7,7 +7,8 @@ import { MdFavoriteBorder } from 'react-icons/md';
 import { FiLogOut } from 'react-icons/fi';
 import { AiOutlineDown } from 'react-icons/ai';
 import { useHooks } from '../../../../hooks/useHooks';
-import { useAuth } from '../../../../utils/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
+
 
 const Account = () => {
     const [selectedOption, setSelectedOption] = useState("My Profile");

@@ -38,7 +38,11 @@ const POST_ROUTES = {
     SIGN_IN: '/signin',
     FORGOT_PASSWORD: '/forgotpassword',
     RESET_PASSWORD:(link) => `/resetpassword/${link}`,
-    ADD_AND_REMOVE_WISHLIST:(productId) => `/add/remove/${productId}`
+    ADD_AND_REMOVE_WISHLIST:(productId) => `/add/remove/${productId}`,
+    ADD_PRODUCT_TO_CART:(productId) =>`/addproducttocart/${productId}`,
+    DELETE_PRODUCT_FROM_CART:(productId) => `/delete/cart/${productId}`,
+    ADD_PRODUCT_TO_GUEST_CART: `/addproducttoguestcart`,
+    DELETE_PRODUCT_FROM_GUEST_CART:(productId)=> `/delete/guestcart/${productId}`
 };
 
 const GET_ROUTES = {
@@ -46,16 +50,20 @@ const GET_ROUTES = {
     GET_USER_PROFILE: '/get-user-profile',
     LOGOUT: `/logout`,
     GET_ALL_USERS: '/get-all-users',
-    GET_ALL_PRODUCTS: `all/products`,
+    GET_ALL_PRODUCTS: `/all/products`,
     ChECK_IS_IN_WISHLIST:(productId) =>`/check/product/${productId}`,
     GET_PRODUCTS_IN_WISHLIST: `/wishlist/product`,
     GET_SINGLE_PRODUCT:(id) => `/single/product/${id}`,
-    GET_LIMITTED_PRODUCTS_IN_WHISHLIST: '/wishlist-limitted/product'
+    GET_LIMITTED_PRODUCTS_IN_WHISHLIST: '/wishlist-limitted/product',
+    GET_CART: `/cart`,
+    GET_GUEST_CART:(guestId) => `/guestcart/${guestId}`
 };
   
 const PATCH_ROUTES = {
   UPDATE_USER_PROFILE: (id) => `/update-user-profile/${id}`,
   UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
+  UPDATE_CART_QUANTITY:(productId) => `/update/cart/${productId}`,
+  UPDATE_GUEST_CART_QUANTITY:(productId) => `/update/guestcart/${productId}`
 };
 
 
@@ -86,12 +94,21 @@ const PUT_ROUTES_SHOP ={
   EDIT_PRODUCT:(id) => `/shop/edit/product/${id}`
 }
 
- // Axios instance
+//  Axios instance
 const axiosInstance = axios.create({
   baseURL: "http://localhost:5000",
   withCredentials: true 
 });
 
 const BASEURL = 'http://localhost:5000'
+
+// const axiosInstance = axios.create({
+//   baseURL: "https://frankbackend.cntb.onekana.ke/",
+//   withCredentials: true 
+// });
+
+// const BASEURL = 'https://frankbackend.cntb.onekana.ke/'
+
+
 
 export {PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES , POST_ROUTES_SHOP, GET_ROUTES_SHOP, PUT_ROUTES_SHOP,BASEURL, axiosInstance};

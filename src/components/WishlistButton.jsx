@@ -1,9 +1,9 @@
 import React, { useEffect,useState } from 'react';
 import { axiosInstance, POST_ROUTES, GET_ROUTES, PATH_URL } from '../constant';
-import { useAuth } from '../utils/AuthContext';
 import { FaHeart,FaRegHeart } from "react-icons/fa";
-import { useToast } from '../utils/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const WishlistButton = ({productId}) => {
     const [isWishlisted,setIsWishlisted] =useState(null);

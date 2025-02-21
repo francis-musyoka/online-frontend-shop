@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { validateAddressForm ,validate} from '../../../utils/validateForms';
 import Button from '../../../components/Button';
-import { useShopAuth } from '../../../utils/ShopAuthContext';
 import { axiosInstance, POST_ROUTES_SHOP } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
+import { useShopAuth } from '../../../context/ShopAuthContext';
+import { useToast } from '../../../context/ToastContext';
 
 
 

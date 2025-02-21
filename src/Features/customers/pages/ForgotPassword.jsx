@@ -1,8 +1,8 @@
 import React from 'react';
 import ForgotPasswordForm from '../../../components/ForgotPasswordForm';
-import { useToast } from '../../../utils/ToastContext';
 import { axiosInstance,POST_ROUTES,PATH_URL } from '../../../constant';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../../context/ToastContext';
 
 const ForgotPassword = () => {
 

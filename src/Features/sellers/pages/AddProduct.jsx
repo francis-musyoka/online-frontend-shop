@@ -1,8 +1,8 @@
 import React, {  } from 'react';
 import ProductForm from '../components/ProductForm';
 import { axiosInstance, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../../../context/ToastContext';
 
 
 const AddProduct = () => {

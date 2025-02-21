@@ -1,43 +1,49 @@
 import React,{useEffect, useState} from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { axiosInstance, GET_ROUTES, PATH_URL } from '../../../constant';
+import { axiosInstance, BASEURL, GET_ROUTES } from '../../../constant';
+import { useCartContext } from '../../../context/CartContext';
+import CartUpdateButton from '../../../components/CartUpdateButton';
+
 
 
 const Home = () => {
 
     const [product,setProduct] = useState('');
+    
+    const {addToCart, cartItem} = useCartContext();
 
     useEffect(()=>{
+        
         const fetchProducts = async()=>{
             const response = await axiosInstance.get(GET_ROUTES.GET_ALL_PRODUCTS);
             if(response.data.success){
                 setProduct(response.data.products)
             }
-            
         };
         fetchProducts();
+
     },[setProduct]);
    
-    
 
-    const navigate = useNavigate()
-
-    const handleClick =()=>{
-        navigate(PATH_URL.CART)
-    }
+    const handleClick =async(id)=>{
+        await addToCart(id); 
+    };
    
     return (
 
         <>
             {product && product.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-                    {product.map((product) => (
+                    {product.map((product) => { 
+                        const cartProduct = cartItem.find(item => item.productId === product.id);
+                        return(
                         <div key={product.id} className="bg-white border rounded-lg shadow-lg overflow-hidden">
+                            
                             <Link to={`/${product.productName}`} state={{productId:product.id}} className="bg-white p-4 flex items-center justify-center">
                             <img
                                 className="w-full h-auto object-contain"
-                                src={product.image && product.image.length > 0 ? `http://localhost:5000${product.image[0]}` : null}
+                                src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null}
                                 alt={product.productName || 'Product Image'}
                             />
                             </Link>
@@ -52,11 +58,16 @@ const Home = () => {
                                     <span className="text-lg font-light text-neutral">
                                     KSH {product.price.toLocaleString()}
                                     </span>
-                                    <Button label="Add to Cart" variant="primary" size="medium" onClick={handleClick} />
+                                    
+                                    {cartItem.some(items => items.productId === product.id) ? (
+                                        <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity}/> 
+                                    ): (
+                                        <Button label="Add to Cart" variant="primary" size="medium" onClick={()=>handleClick(product.id)} />
+                                    )}
                                 </div>
                             </div>
                         </div>
-                    ))}
+                )})}
                 </div>
             ) : (
             <h1 className="text-neutral m-10 text-center">No products</h1>

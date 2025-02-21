@@ -19,16 +19,17 @@ import EditProduct from './Features/sellers/pages/EditProduct';
 import ShopProfile from './Features/sellers/pages/ShopProfile';
 import MyProducts from './Features/sellers/pages/MyProducts';
 import CreateAccount from './Features/sellers/pages/CreateAccount';
-import AuthProvider from './utils/AuthContext';
-import ShopAuthProvider from './utils/ShopAuthContext';
+import AuthProvider from './context/AuthContext';
+import ShopAuthProvider from './context/ShopAuthContext';
 import RequireAuth from './Features/customers/component/RequireAuth';
-import ToastProvider from './utils/ToastContext';
+import ToastProvider from './context/ToastContext';
 import NotFound from './components/NotFound';
 import ResetPassword from '../src/Features/customers/pages/ResetPassword';
 import ForgotPasswordShop from './Features/sellers/pages/ForgotPasswordShop';
 import ResetShopPassword from './Features/sellers/ResetShopPassword';
 import ShopRequireAuth from './Features/sellers/components/ShopRequireAuth';
 import ProductDetails from './Features/customers/pages/ProductDetails';
+import CartProvider from './context/CartContext';
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
 
                     {/* customers */}
                     <Route path={PATH_URL.HOME} element={<AuthProvider><Layout/></AuthProvider>}>
+                    <Route element={<CartProvider><Outlet/></CartProvider>}>
                         <Route path={PATH_URL.HOME} element={<Home />} />
                         <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
                         <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
@@ -53,6 +55,7 @@ function App() {
                             </Route>
                         </Route>
                         <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
+                    </Route>
                     </Route>
                     <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
                     <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>

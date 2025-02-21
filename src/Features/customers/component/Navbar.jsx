@@ -7,12 +7,14 @@ import { HiMiniUserCircle } from 'react-icons/hi2';
 import { GrSearch } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
 import { PATH_URL } from '../../../constant';
-import { useAuth } from '../../../utils/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
+
+
 
 
 const Navbar = () => {
     const {token} = useAuth();
-
+    
     return (
         <nav className="">
             <div className="max-w-screen-xl mx-auto p-4 ">
@@ -37,7 +39,7 @@ const Navbar = () => {
                         
                         
                         <NavLink to={PATH_URL.CART} className={({ isActive }) =>`flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                            <BsCartCheck size={26}  />
+                            <BsCartCheck size={26} />
                         </NavLink>
                     </div>
 

@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const isPasswordValid = (password) => {
     const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{6,16}$/;
     return regex.test(password)
@@ -27,3 +29,12 @@ export const isZipCodeValid =(zipCode)=>{
     const isvalid = zipCodeRegex.test(zipCode);
     return isvalid
 }
+
+export const createGuestId = ()=>{
+    let guestId = localStorage.getItem('guestId'); 
+    if (!guestId) {
+        guestId = uuidv4().replace(/-/g, '');
+        localStorage.setItem('guestId',guestId);
+    }
+    return guestId;
+};

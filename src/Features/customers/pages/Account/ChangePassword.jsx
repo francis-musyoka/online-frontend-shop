@@ -2,7 +2,7 @@ import React,{useState}from 'react';
 import { useHooks } from '../../../../hooks/useHooks';
 import { validateChangePassword } from '../../../../utils/validateForms';
 import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
-import { useToast } from '../../../../utils/ToastContext';
+import { useToast } from '../../../../context/ToastContext';
 
 
 const ChangePassword = ({closeModal, user}) => {

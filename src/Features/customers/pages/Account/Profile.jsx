@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../../../utils/AuthContext';
 import { validateUpdateForm } from '../../../../utils/validateForms';
 import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
 import ChangePassword from './ChangePassword';
+import { useAuth } from '../../../../context/AuthContext';
 
 
 

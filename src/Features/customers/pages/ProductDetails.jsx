@@ -5,6 +5,8 @@ import {  axiosInstance, BASEURL, GET_ROUTES, PATH_URL } from '../../../constant
 import WishlistButton from '../../../components/WishlistButton';
 import DisplayDescription from '../component/DescriptionEditor';
 import KeyFeaturesDisplay from '../component/KeyFeatursEditor';
+import { useCartContext } from '../../../context/CartContext';
+import CartUpdateButton from '../../../components/CartUpdateButton';
 
 
 
@@ -16,6 +18,8 @@ const ProductDetails = () => {
     const [product, setProduct] = useState()
     const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
+
+    const {cartItem,addToCart} = useCartContext();
     
     useEffect(()=>{
         const getProductDetails = async()=>{
@@ -30,10 +34,11 @@ const ProductDetails = () => {
       
     },[productId,setProduct]);
     
+    const cartProduct = cartItem.find(item => item.productId === product.id);
 
-    const handleClick =()=>{
-        navigate(PATH_URL.CART)
-    }
+    const handleClick = async()=>{
+       await addToCart(productId);
+    };
 
   
     return (
@@ -78,7 +83,13 @@ const ProductDetails = () => {
                                 <div className="flex items-end">
                                     <h1 className="text-xl font-bold lg:text-3xl">KSH {product?.price.toLocaleString()}</h1>
                                 </div>
-                                <Button label="Add to Cart" variant="primary" size="medium" onClick={handleClick} />
+                                {cartProduct ? ( 
+                                    <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity}/> 
+                                    ) : (
+                                        <Button label="Add to Cart" variant="primary" size="medium" onClick={handleClick} />
+                                    )
+                                }
+                                
                             </div>
                         </div>
                     </div>

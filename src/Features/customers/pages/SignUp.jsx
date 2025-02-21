@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import OpenAccount from '../../../components/OpenAccount';
 import { axiosInstance, PATH_URL, POST_ROUTES } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
+import { useToast } from '../../../context/ToastContext';
 
 
 const SignUp = () => {

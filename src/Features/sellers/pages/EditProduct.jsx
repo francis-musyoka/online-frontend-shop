@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProductForm from '../components/ProductForm';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { axiosInstance, GET_ROUTES_SHOP, PATH_URL, PUT_ROUTES_SHOP } from '../../../constant';
-import { useToast } from '../../../utils/ToastContext';
+import { useToast } from '../../../context/ToastContext';
 
 
 const EditProduct = () => {

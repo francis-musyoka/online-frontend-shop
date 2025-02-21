@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useShopAuth } from '../../../utils/ShopAuthContext';
 import { PATH_URL } from '../../../constant';
+import { useShopAuth } from '../../../context/ShopAuthContext';
 
 const ShopRequireAuth = () => {
     const navigate = useNavigate();

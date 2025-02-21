@@ -8,7 +8,7 @@ import { FaBullhorn, FaGift } from "react-icons/fa";
 import { FiUsers, FiLogOut } from "react-icons/fi";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { PATH_URL } from "../../../constant";
-import { useShopAuth } from "../../../utils/ShopAuthContext";
+import { useShopAuth } from "../../../context/ShopAuthContext";
 
 
 const SellDashBoard = () => {

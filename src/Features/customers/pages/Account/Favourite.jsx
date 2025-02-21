@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../../components/Button';
 import { axiosInstance, BASEURL, GET_ROUTES } from '../../../../constant';
-import { useToast } from '../../../../utils/ToastContext';
 import WishlistButton from '../../../../components/WishlistButton';
+import { useToast } from '../../../../context/ToastContext';
 
 const Favourite = () => {
     const [products, setProducts] = useState([]);

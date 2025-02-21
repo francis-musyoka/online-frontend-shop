@@ -1,8 +1,8 @@
 import React from 'react';
 import ResetPasswordForm from '../../components/ResetPasswordForm';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../utils/ToastContext';
 import { axiosInstance, PATH_URL, POST_ROUTES_SHOP } from '../../constant';
+import { useToast } from '../../context/ToastContext';
 
 const ResetShopPassword = () => {
     const{link} = useParams();
