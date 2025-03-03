@@ -15,10 +15,10 @@ const ResetPassword = () => {
             const response = await axiosInstance.post(`${POST_ROUTES.RESET_PASSWORD(link)}`,{password,confirmPassword});
             if(response.data.success){
                 showToast("Password reset successfully",'success');
-                navigate(PATH_URL.SELL.LOG_IN)
+                navigate(PATH_URL.SIGN_IN)
             }
         } catch (error) {
-            showToast(error.response.data.error);
+            showToast(error.response?.data?.error );
         };    
     };
     

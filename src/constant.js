@@ -11,9 +11,11 @@ const PATH_URL = {
     RESETPASSWORD: "/reset-password/:link", 
     PRODUCT_DETAILS: '/:product-name',
     REVIEWS_DISPLAY: '',
+    ADD_ADDRESS: '/book_address',
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
+        ADDRESS: '/account/addresses',
         ORDERS: '/account/orders',
         FAVOURITES: '/account/favourites',
     },
@@ -42,7 +44,10 @@ const POST_ROUTES = {
     ADD_PRODUCT_TO_CART:(productId) =>`/addproducttocart/${productId}`,
     DELETE_PRODUCT_FROM_CART:(productId) => `/delete/cart/${productId}`,
     ADD_PRODUCT_TO_GUEST_CART: `/addproducttoguestcart`,
-    DELETE_PRODUCT_FROM_GUEST_CART:(productId)=> `/delete/guestcart/${productId}`
+    DELETE_PRODUCT_FROM_GUEST_CART:(productId)=> `/delete/guestcart/${productId}`,
+    ADD_ADDRESS: '/add-new-address',
+    DELETE_ADDRESS:(addressId)=>`/remove/address/${addressId}`,
+
 };
 
 const GET_ROUTES = {
@@ -56,14 +61,16 @@ const GET_ROUTES = {
     GET_SINGLE_PRODUCT:(id) => `/single/product/${id}`,
     GET_LIMITTED_PRODUCTS_IN_WHISHLIST: '/wishlist-limitted/product',
     GET_CART: `/cart`,
-    GET_GUEST_CART:(guestId) => `/guestcart/${guestId}`
+    GET_GUEST_CART:(guestId) => `/guestcart/${guestId}`,
+    GET_ADDRESSES: '/addresses',
 };
   
 const PATCH_ROUTES = {
   UPDATE_USER_PROFILE: (id) => `/update-user-profile/${id}`,
   UPDATE_USER_PASSWORD: (id) => `/update-user-password/${id}`,
   UPDATE_CART_QUANTITY:(productId) => `/update/cart/${productId}`,
-  UPDATE_GUEST_CART_QUANTITY:(productId) => `/update/guestcart/${productId}`
+  UPDATE_GUEST_CART_QUANTITY:(productId) => `/update/guestcart/${productId}`,
+  UPDATE_ADDRESS:(addressId) =>`/update/address/${addressId}`,
 };
 
 
@@ -77,7 +84,7 @@ const POST_ROUTES_SHOP ={
   UPDATE_SHOP_PROFILR:(id) => `/update-shop-profile/${id}`,
   ADD_CATEGORY: '/add-category',
   ADD_PRODUCTS: '/add-product',
-  DELETE_PRODUCT:(productId) => `/delete/product/${productId}`
+  DELETE_PRODUCT:(productId) => `/delete/product/${productId}`,
 
 }
   

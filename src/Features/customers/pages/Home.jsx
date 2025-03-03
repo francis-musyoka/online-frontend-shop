@@ -17,7 +17,7 @@ const Home = () => {
         
         const fetchProducts = async()=>{
             const response = await axiosInstance.get(GET_ROUTES.GET_ALL_PRODUCTS);
-            if(response.data.success){
+            if(response.data?.success){
                 setProduct(response.data.products)
             }
         };
@@ -26,8 +26,8 @@ const Home = () => {
     },[setProduct]);
    
 
-    const handleClick =async(id)=>{
-        await addToCart(id); 
+    const handleClick =async(productId)=>{
+        await addToCart(productId); 
     };
    
     return (

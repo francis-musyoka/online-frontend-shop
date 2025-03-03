@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { HiXMark } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES, PATH_URL, } from '../../../constant';
@@ -14,7 +14,7 @@ const Cart = () => {
     const {token} = useAuth();
     const {showToast} = useToast();
 
-    const {removeItem, cartItem,totalQuantity,totalAmount} = useCartContext();
+    const {removeItem, cartItem,totalQuantity,totalAmount, addToCart} = useCartContext();
   
     useEffect(()=>{
         if(token){
@@ -33,6 +33,17 @@ const Cart = () => {
         };
     },[showToast,token]);
 
+    const filteredFavourite = useMemo(()=>
+        favourite.filter(favItems=>
+            !cartItem.some(cartItem => cartItem.productId === favItems.productId)
+        ),
+        [favourite, cartItem]
+    );
+
+    
+ 
+    
+    
     return (
         <>
             {cartItem.length > 0 ? (
@@ -57,9 +68,7 @@ const Cart = () => {
                                                 <button onClick={()=>removeItem(product.productId)} className="text-neutral hover:text-secondary">
                                                     <HiXMark size={24} />
                                                 </button>
-                                                <div className="flex items-center border border-gray-300   rounded-sm overflow-hidden">
                                                     <CartUpdateButton productId={product.productId} quantity={product.quantity} productQuantity={product.Product.quantity}/>
-                                                </div>
                                             </div> 
                                         </div>
                                     </div>
@@ -108,18 +117,15 @@ const Cart = () => {
                
             )}
 
-            {token &&(
+            {token && filteredFavourite.length > 0 ?(
                 <>
                     <div className='rounded-lg bg-white mx-2 sm:mx-10 p-9 mt-10 mb-10' >    
                         <div className='border-b border-black flex justify-between'>
                             <h3 className="text-xl font-bold text-gray-900  dark:text-black mb-4">Favourites</h3>
-                            {!favourite && favourite.length === 0 (
                                 <Link to={PATH_URL.ACCOUNT.FAVOURITES} className="text-lg font-mono text-secondary pr-4 hover:underline">See All</Link>
-                            )}
                         </div>
-                        {favourite && favourite.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
-                                {favourite.map((product) => (
+                                {filteredFavourite.map((product) => (
                                     <div key={product.productId} className="bg-white border rounded-lg shadow-lg overflow-hidden">
                                         <Link to={`/${product.Product.productName}`} state={{productId:product.productId}} className="bg-white p-4 flex items-center justify-center">
                                         <img
@@ -141,6 +147,7 @@ const Cart = () => {
                                                 </span>
 
                                                 <button 
+                                                    onClick={()=>addToCart(product.productId)}
                                                     className=" rounded-md text-blue-950 0 px-3 py-2 text-base font-normal bg-yellow-500 hover:bg-black hover:text-white">
                                                     Add to cart
                                                 </button>
@@ -149,10 +156,10 @@ const Cart = () => {
                                     </div>
                                 ))}
                             </div>
-                        ):(<h1 className="text-lg text-gray-700 font-normal my-5"> No items</h1>)}
+                        
                     </div>
                 </>
-            )}
+            ):(<></>)}
         </>    
     );
 }

@@ -6,6 +6,7 @@ import { HiOutlineShoppingBag } from 'react-icons/hi';
 import { MdFavoriteBorder } from 'react-icons/md';
 import { FiLogOut } from 'react-icons/fi';
 import { AiOutlineDown } from 'react-icons/ai';
+import { FcAddressBook } from "react-icons/fc";
 import { useHooks } from '../../../../hooks/useHooks';
 import { useAuth } from '../../../../context/AuthContext';
 
@@ -51,6 +52,14 @@ const Account = () => {
                             </NavLink>
 
                             <NavLink
+                                to = "addresses"
+                                onClick={() => handleOptionClick("Your Addresses")}
+                                className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
+                            >
+                                <FcAddressBook className="inline-block mr-3" size={24} />
+                                Your Addresses
+                            </NavLink>
+                            <NavLink
                                 to = "orders"
                                 onClick={() => handleOptionClick("My Orders")}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
@@ -90,6 +99,17 @@ const Account = () => {
                 >
                     <RiUserLine className="mr-3" size={28} />
                     My Profile
+                </NavLink>
+
+
+                <NavLink
+                    to="addresses"
+                    className={({ isActive }) =>
+                        `flex items-center px-4 py-3 rounded-lg hover:bg-gray-200 transition duration-300 ease-in-out w-full ${isActive ? 'bg-gray-200' : ''}`
+                    }
+                >
+                    <FcAddressBook className="mr-3" size={28} />
+                    Your Addresses
                 </NavLink>
 
                 <NavLink

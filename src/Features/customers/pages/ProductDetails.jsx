@@ -16,7 +16,6 @@ const ProductDetails = () => {
     const location = useLocation();
     const {productId} = location.state;
     const [product, setProduct] = useState()
-    const navigate = useNavigate();
     const [selectedImage, setSelectedImage] = useState(null);
 
     const {cartItem,addToCart} = useCartContext();
@@ -33,8 +32,11 @@ const ProductDetails = () => {
         getProductDetails();
       
     },[productId,setProduct]);
+
+    console.log('cart::=>', cartItem);
     
-    const cartProduct = cartItem.find(item => item.productId === product.id);
+    
+    const cartProduct = cartItem?.find(item => item.productId === productId);
 
     const handleClick = async()=>{
        await addToCart(productId);
@@ -50,7 +52,7 @@ const ProductDetails = () => {
                             <div className="lg:flex lg:items-start">
                                 <div className="lg:order-2 lg:ml-5">
                                     <div className="max-w-xl overflow-hidden rounded-lg">
-                                        <img className="h-full w-full max-w-full object-cover" src={`http://localhost:5000${selectedImage}`} alt="Product" />
+                                        <img className="h-full w-full max-w-full object-cover" src={`${BASEURL}${selectedImage}`} alt="Product" />
                                     </div>
                                 </div>
 
@@ -84,7 +86,7 @@ const ProductDetails = () => {
                                     <h1 className="text-xl font-bold lg:text-3xl">KSH {product?.price.toLocaleString()}</h1>
                                 </div>
                                 {cartProduct ? ( 
-                                    <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity}/> 
+                                    <CartUpdateButton productId={product?.id} quantity={cartProduct?.quantity} productQuantity={product?.quantity}/> 
                                     ) : (
                                         <Button label="Add to Cart" variant="primary" size="medium" onClick={handleClick} />
                                     )

@@ -30,6 +30,8 @@ import ResetShopPassword from './Features/sellers/ResetShopPassword';
 import ShopRequireAuth from './Features/sellers/components/ShopRequireAuth';
 import ProductDetails from './Features/customers/pages/ProductDetails';
 import CartProvider from './context/CartContext';
+import Addresses from './Features/customers/pages/Account/Addresses';
+import AddAddress from './Features/customers/component/AddAddress';
 
 function App() {
 
@@ -50,9 +52,11 @@ function App() {
                         <Route element={<RequireAuth/>}>
                             <Route path={PATH_URL.ACCOUNT.BASE} element={<Account />}>
                                 <Route path={PATH_URL.ACCOUNT.PROFILE} element={<Profile />} />
+                                <Route path={PATH_URL.ACCOUNT.ADDRESS} element={<Addresses/>} />
                                 <Route path={PATH_URL.ACCOUNT.ORDERS} element={<Orders />} />
                                 <Route path={PATH_URL.ACCOUNT.FAVOURITES} element={<Favourite />} />
                             </Route>
+                            <Route path={PATH_URL.ADD_ADDRESS} element={<AddAddress/>}/>
                         </Route>
                         <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
                     </Route>

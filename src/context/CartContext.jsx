@@ -58,11 +58,11 @@ const CartProvider = (props) => {
 
 
     // Add to cart 
-    const addToCart = async(id)=>{
+    const addToCart = async(productId)=>{
 
         if(token){
             try {
-                const response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_CART(id));
+                const response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_CART(productId));
                 
                 if(response.data.success){
                  showToast(response.data.message, 'success')
@@ -74,7 +74,7 @@ const CartProvider = (props) => {
         }else{
             try {
                 const guestId = createGuestId();
-                const response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_GUEST_CART,{productId:id, guestId});
+                const response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_GUEST_CART,{productId:productId, guestId});
                 
                 if(response.data.success){
                  showToast(response.data.message, 'success')

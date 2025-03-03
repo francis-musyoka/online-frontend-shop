@@ -92,7 +92,7 @@ export const validateAddressForm = (formData) => {
         errors.zipCode = "Zip Code is required.";
     } else if (!isZipCodeValid(zipCode)) {
         errors.zipCode = "Zip Code must be in the format 12345 or 12345-6789.";
-    }
+    };
     
     return errors;
 };
@@ -143,8 +143,6 @@ export const validateProductForm = (formData) => {
     if( formData.price < 0){
         errors.price = 'Price must be greater than 0'
     }
-
-    console.log(formData.quantity);
     
     if(formData.quantity < 0){
         errors.quantity = 'Quantity must be greater than 0'
@@ -214,4 +212,45 @@ export const validateChangePassword =(password,confirmPassword,currentPassword=n
     } 
      
     return error
+};
+
+export const validateAddAddressForm = (formData) => {
+    const {firstName, lastName, address,city,state,zipCode,phoneNumber} =formData
+    const errors = {};
+
+    if (!firstName.trim()) {
+        errors.firstName = "Please Enter First Name";
+    }
+
+    if (!lastName.trim()) {
+        errors.lastName = "Please Enter Last Name";
+    }
+    if (!address.trim()) {
+        errors.address = "Please Enter Address";
+    }
+
+    if (!city.trim()) {
+        errors.city = "City is required.";
+    };
+
+    if (!state.trim()) {
+        errors.state = "State is required.";
+    } else if (!isStateValid(state)) {
+        errors.state = "State should only contain letters.";
+    };
+
+    if (!zipCode.trim()) {
+        errors.zipCode = "Zip Code is required.";
+    } else if (!isZipCodeValid(zipCode)) {
+        errors.zipCode = "Zip Code must be in the format 12345 or 12345-6789.";
+    };
+    
+    if (!phoneNumber.trim()) {
+        errors.phoneNumber = "Please Enter Business Number";
+    }else if (!isPhoneNumberValid(phoneNumber)) {
+        errors.phoneNumber = "Please Enter Valid Phone Number";
+    };
+    
+    
+    return errors;
 };
