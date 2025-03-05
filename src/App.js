@@ -32,6 +32,7 @@ import ProductDetails from './Features/customers/pages/ProductDetails';
 import CartProvider from './context/CartContext';
 import Addresses from './Features/customers/pages/Account/Addresses';
 import AddAddress from './Features/customers/component/AddAddress';
+import CheckOut from './Features/customers/pages/CheckOut';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
                         <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
                         <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
                         <Route path={PATH_URL.CART} element={<Cart />} />
+                       
                         <Route element={<RequireAuth/>}>
                             <Route path={PATH_URL.ACCOUNT.BASE} element={<Account />}>
                                 <Route path={PATH_URL.ACCOUNT.PROFILE} element={<Profile />} />
@@ -61,6 +63,7 @@ function App() {
                         <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
                     </Route>
                     </Route>
+                    <Route path={PATH_URL.CHECK_OUT} element={<CheckOut/>}/>
                     <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
                     <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
                     <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />

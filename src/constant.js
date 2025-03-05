@@ -12,6 +12,7 @@ const PATH_URL = {
     PRODUCT_DETAILS: '/:product-name',
     REVIEWS_DISPLAY: '',
     ADD_ADDRESS: '/book_address',
+    CHECK_OUT: '/checkout/summary',
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',

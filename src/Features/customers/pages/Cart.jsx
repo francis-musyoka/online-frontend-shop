@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { HiXMark } from "react-icons/hi2";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate,  } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES, PATH_URL, } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 import { useAuth } from '../../../context/AuthContext';
@@ -13,6 +13,7 @@ const Cart = () => {
 
     const {token} = useAuth();
     const {showToast} = useToast();
+    const navigate = useNavigate();
 
     const {removeItem, cartItem,totalQuantity,totalAmount, addToCart} = useCartContext();
   
@@ -93,7 +94,12 @@ const Cart = () => {
                                     {/* <p className="text-sm text-gray-700">including VAT</p> */}
                                 </div>
                             </div>
-                            <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">Check out</button>
+                            <button
+                                onClick={()=>navigate(PATH_URL.CHECK_OUT)} 
+                                className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+                            >
+                                Check out
+                            </button>
                         </div>
                     </div>
                 </div>
