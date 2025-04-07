@@ -12,7 +12,7 @@ export const isEmailValid = (email) =>{
 };
 
  export const isPhoneNumberValid = (phoneNumber)=>{
-    const regex = /^07[ -]?\d{1}[ -]?\d{3}[ -]?\d{4}$/;
+    const regex = /^7[ -]?\d{1}[ -]?\d{3}[ -]?\d{4}$/;
     const isvalid = regex.test(phoneNumber);
     return isvalid
     

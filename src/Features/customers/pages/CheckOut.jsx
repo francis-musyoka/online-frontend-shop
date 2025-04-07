@@ -1,109 +1,292 @@
-import React from 'react';
-import AddAddress from '../component/AddAddress';
-
-
+import React, { useEffect, useState } from 'react';
+import { axiosInstance, BASEURL, GET_ROUTES, POST_ROUTES } from '../../../constant';
+import SelectAddress from '../component/SelectAddress';
+import { useCartContext } from '../../../context/CartContext';
+import MpesaForm from './MpesaForm';
+import { useToast } from '../../../context/ToastContext';
+import { pullTransactionStatus } from '../../../utils/pullTransactionStatus';
+import Spinning from '../../../components/Spinning';
 
 const CheckOut = () => {
 
-    const products = [
-        {
-            id:1,
-            image: 'https://ke.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/15/224652/1.jpg?6998',
-            name: 'Vitron V527 - 2.1 CH Multimedia Speaker',
-            price: 35000,
-            quantity: 2
-        },
-        {
-            id:2,
-            image: 'https://ke.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/85/8894252/1.jpg?1211',
-            name: 'Hamilton Modern Design Coffee Table ',
-            price: 3500,
-            quantity: 1
-        },
-        {
-            id:3,
-            image: 'https://ke.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/20/2282682/1.jpg?8244',
-            name: 'Sonar Stainless Steel 1.8Ltr Electric Kettle',
-            price: 350,
-            quantity: 1
-        },
-    ]
-    const Shipping = 500;
-    const SubTotal = products.reduce((sum,product)=> sum + product.price * product.quantity, 0);
-    const total = SubTotal + Shipping;
+    const [allAddresses, setAllAddresses] = useState([]);
+    const [onChangingAddress, setOnChangingAddress] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState(() => {
+        const storedAddress = localStorage.getItem('selectedAddress');
+        return storedAddress ? JSON.parse(storedAddress) : null;
+    });
+
+    const [paymentMethod, setPaymentMethod] = useState(localStorage.getItem('paymentMethod') || '');
+    const [paymentDetails, setPaymentDetails] =useState(() => {
+        const storedPayment = sessionStorage.getItem('payment');
+        return storedPayment ? JSON.parse(storedPayment) : null;
+    });
+
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [pollStatus, setPollStatus] = useState('idle');
+    const [lastTransactionId,setLastTransactionId] = useState(localStorage.getItem('lastTransactionId') || null);
+    const [orderNumber,setOrderNumber] = useState(localStorage.getItem('orderNumber') || null);
+
+    const { cartItem,totalAmount,} = useCartContext();
+    const {showToast} = useToast();
+    
+    useEffect(()=>{
+        const fetchAddresses = async()=>{
+            const {data} = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
+            if(data.success){
+                setAllAddresses(data.addresses);
+            };
+        };
+        fetchAddresses();
+    },[]);
+
+    useEffect(() => { 
+        if(!paymentDetails){
+            const fetchPaymentDetails = async () => {
+                try {
+                    const { data } = await axiosInstance.get(GET_ROUTES.GET_MPESA_PAYMENT);
+                    if (data.success) {
+                        setPaymentDetails(data.payment);
+                        sessionStorage.setItem('payment', JSON.stringify(data.payment))
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch payment details", error);
+                }
+            };
+            fetchPaymentDetails();
+        }
+    }, [paymentDetails]);
+
+    
+    useEffect(()=>{
+        if(!selectedAddress && allAddresses?.length){
+            const selectAddress = allAddresses?.find(address => address.isDefault) || allAddresses?.[0]
+            setSelectedAddress(selectAddress)
+            localStorage.setItem('selectedAddress', JSON.stringify(selectAddress));
+        }; 
+    },[allAddresses, selectedAddress]);
+    
+
+    const handleAddressSelection =(address)=>{
+        setSelectedAddress(address);
+        localStorage.setItem('selectedAddress', JSON.stringify(address));
+    }
+
+    const Shipping = 0;
+    const total = totalAmount + Shipping;
+
+    const phoneNumber = `${paymentDetails?.countryCode}${paymentDetails?.phoneNumber}`
+
+    const handlePaymentMethod = (paymentMethod)=> {
+        setPaymentMethod(paymentMethod)
+        localStorage.setItem('paymentMethod' , paymentMethod)
+    };
+    useEffect(()=>{
+        if(pollStatus === "failed"|| pollStatus === "success"){
+            setLastTransactionId(null);
+            localStorage.removeItem("lastTransactionId");
+        }
+    },[pollStatus]);
+    
+  
+    
+    const confirmOrderButton = async()=>{
+        if(selectedAddress && paymentDetails){
+
+            const items = cartItem.map(item => ({
+                productName: item.Product.productName,
+                price: item.Product.price,
+                productId: item.productId,
+                quantity: item.quantity,
+            }));
+
+            try {
+                // Create Order
+                setIsProcessing(true)
+                const orderResponse = await axiosInstance.post(POST_ROUTES.CREATE_ORDER,{
+                    items,
+                    paymentMethod 
+                });
+
+                if(orderResponse.data.success){
+                    setOrderNumber(orderResponse.data.orderId);
+                    console.log(orderResponse.data.orderId);
+                    
+                    localStorage.setItem('orderNumber', orderResponse.data.orderId );
+
+                    // Initiate M-pesa Transaction
+                    const transactionResponse = await axiosInstance.post(POST_ROUTES.MPESA_TRANSCATION,{total, phoneNumber,orderNumber});
+
+                    if(transactionResponse.data.success){
+                        const transactionId = transactionResponse.data.data.CheckoutRequestID;
+                        setLastTransactionId(transactionId)
+                        localStorage.setItem('lastTransactionId', transactionId )
+                        showToast('Please check your phone and enter your M-Pesa PIN.', 'success');
+
+                         // Start polling for transaction status
+                        pullTransactionStatus(transactionId, showToast,setPollStatus,orderNumber)
+                    };
+                }
+                
+            } catch (error) {
+                console.log(error);
+                showToast('Error occured, Please try again', 'error')
+                
+            }finally{
+                setIsProcessing(false)
+            }
+        }else{
+            showToast('Select payment and address')
+        }
+    };
 
     return (
-        <div className="flex justify-center bg-gray-100 py-10">
-           <div className="max-w-7xl w-full px-3 md:flex md:space-x-6 xl:px-0 items-start">
-                <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md">
-                    <div>
-                        <h1 className='text-black text-xl font-medium border-b pb-3'>Shipping Information</h1>
-                        <AddAddress CheckOut={true} />
-                    </div>
-    
-                    <hr className="border-t-2 border-gray-200 my-6" />
-
-                    <div>
-                        <h1 className='text-black text-xl font-medium'>Payment Methods</h1>
-                        <div className='flex mt-4 space-x-8'>
-                            <label className="flex items-center space-x-3">
-                                <input type="radio" className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
-                                <span className="text-xl text-gray-950">M-Pesa</span>
-                            </label>
-                            <label className="flex items-center space-x-3">
-                                <input type="radio" className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
-                                <span className="text-xl text-gray-950">Card</span>
-                            </label>
-                        </div>
-                    </div>
+        <>
+             {pollStatus === 'checking' ? (
+                <div className="flex justify-center items-center mt-4">
+                    <Spinning/>
+                    <p className="ml-2">Verifying payment...</p>
                 </div>
-    
-                <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md ">
-                    <h1 className='text-black text-xl font-medium border-b pb-3'>Order Summary</h1>
-    
-                    <div className="divide-y">
-                        {products.map(product => (
-                            <div key={product.id} className="flex items-center justify-between py-4">
-                                <img src={product.image} alt={product.name} className="w-16 h-16 object-cover rounded-lg" />
-                                
-                                <div className="ml-4 flex-1">
-                                    <h1 className="text-lg font-normal text-gray-900 line-clamp-2">{product.name}</h1>
-                                    <div className="flex items-center justify-between text-sm text-gray-600 mt-3">
-                                        <p>Quantity: {product.quantity}</p>
-                                        <p className="text-base font-medium text-black">KSH {product.price.toLocaleString()}</p>
+            ):pollStatus === 'failed'?(
+                <div className="text-center my-4">
+                    <p className="text-red-600">Payment failed.</p>
+                    <button onClick={confirmOrderButton} className="btn-primary mt-2">
+                        Try Again
+                    </button>
+                </div>
+            ):pollStatus === 'timeout'? (
+                <div className="text-center my-4">
+                    <p className="text-yellow-700">Didn't get a response from M-Pesa.</p>
+                    <button onClick={() => pullTransactionStatus(lastTransactionId, showToast, setPollStatus)} className="btn-primary mt-2">
+                        I’ve Paid. Check Again
+                    </button>
+                </div>
+            ):pollStatus === 'success'? (
+                <div className="text-center my-4 text-green-600">
+                    <p>Payment successful! Thank you for your order.</p>
+                </div>
+
+            ):(
+                <div className="flex justify-center bg-gray-100 py-10">
+                    <div className="max-w-7xl w-full px-3 md:flex md:space-x-6 xl:px-0 items-start">
+                        <div className="w-full md:w-2/3 bg-white p-6 rounded-lg shadow-md">
+                            
+                            <h1 className='text-black text-xl font-medium border-b pb-3'>Shipping Information</h1>
+                            {!onChangingAddress && selectedAddress ?(
+                                <div className='pl-6'>
+                                    <h1 className='font-bold'>{selectedAddress.firstName} {selectedAddress.lastName}</h1>
+                                    <p className='mb-3'>{selectedAddress.address} | {selectedAddress.apartment} | {selectedAddress.city},
+                                        {selectedAddress.state} | {selectedAddress.phoneNumber}
+                                    </p>
+                                    <button 
+                                        onClick={()=>setOnChangingAddress(true)}
+                                        className='bg-secondary py-2 px-3 text-black rounded-md'
+                                    >
+                                        Change Address
+                                    </button>
+                                </div>
+                                ):(
+                                    <div>
+                                        <SelectAddress onAddingAddress = {(newAddress)=>setAllAddresses(prev=>[...prev,newAddress])} addresses={allAddresses} selectedLocation={selectedAddress} onSelect = {handleAddressSelection} closeModel={()=>setOnChangingAddress(false)}/>
                                     </div>
+                                )}     
+                        
+                            <hr className="border-t-2 border-gray-200 my-6" />
+        
+                            <div>
+                                <h1 className='text-black text-xl font-medium'>Payment Methods</h1>
+        
+                                <div className='flex mt-4 space-x-8'>
+                                    <label htmlFor="mpesa" className="flex items-center space-x-3">
+                                        <input 
+                                            type="radio" 
+                                            name='payment'
+                                            id='mpesa'
+                                            value='mpesa'
+                                            checked={paymentMethod === "mpesa"}
+                                            onChange={()=>handlePaymentMethod('mpesa')}
+                                            className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                                        />
+                                        <span className="text-xl text-gray-950">M-Pesa</span>
+                                    </label>
+                                    <label htmlFor="card" className="flex items-center space-x-3">
+                                        <input 
+                                            type="radio" 
+                                            name='payment'
+                                            id = 'card'
+                                            value='card'
+                                            checked={paymentMethod === "card"}
+                                            onChange={()=>handlePaymentMethod('card')}
+                                            className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
+                                        <span className="text-xl text-gray-950">Card</span>
+                                    </label>
+                                </div>
+                                {paymentMethod === "mpesa" ? (
+                                    <MpesaForm paymentDetails={paymentDetails} setPaymentDetails= {setPaymentDetails} />
+                                    ): paymentMethod === "card" ? (
+                                    <h1>card coming soon</h1>
+                                ):(<></>)}
+                            </div>
+                        </div>
+                
+                        <div className="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md ">
+                            <h1 className='text-black text-xl font-medium border-b pb-3'>Order Summary</h1>
+            
+                            <div className="divide-y">
+                                {cartItem.map(product => (
+                                    <div key={product.productId} className="flex items-center justify-between py-4">
+                                        <img 
+                                            src={product.Product.image && product.Product.image.length > 0 ? `${BASEURL}${product.Product.image[0]}` : null}
+                                            alt="product-image"
+                                            className="w-16 h-16 object-cover rounded-lg"
+                                        />
+                                        <div className="ml-4 flex-1">
+                                            <h1 className="text-lg font-normal text-gray-900 line-clamp-2">{product.Product.productName}</h1>
+                                            <div className="flex items-center justify-between text-sm text-gray-600 mt-3">
+                                                <p>Quantity: {product.quantity}</p>
+                                                <p className="text-base font-medium text-black">KSH {product.Product.price.toLocaleString()}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                ))}
+                            </div>
+                            <hr className="border-t-2 border-gray-200 my-4" />
+                            <div className="mt-6">
+                                <div className="flex justify-between text-gray-700">
+                                    <p>Subtotal</p>
+                                    <p>KSH {totalAmount.toLocaleString()}</p>
+                                </div>
+                                <div className="flex justify-between text-gray-700 mt-2">
+                                    <p>Shipping</p>
+                                    <p>KSH {Shipping}</p>
+                                </div>
+                                <hr className="border-t-2 border-gray-200 my-4" />
+                                <div className="flex justify-between font-bold text-lg">
+                                    <p>Total</p>
+                                    <p>KSH {total.toLocaleString()}</p>
                                 </div>
                             </div>
-                           
-                        ))}
-                    </div>
-                    <hr className="border-t-2 border-gray-200 my-4" />
-                    <div className="mt-6">
-                        <div className="flex justify-between text-gray-700">
-                            <p>Subtotal</p>
-                            <p>KSH {SubTotal.toLocaleString()}</p>
+                            <hr className="border-t-2 border-gray-200 my-4" />
+                            <div className="mt-6">
+                                <button 
+                                    disabled ={isProcessing}
+                                    onClick={confirmOrderButton}
+                                    className="w-full bg-blue-800 text-white py-3 rounded-lg text-center font-medium disabled:cursor-not-allowed"
+                                >
+                                    Confirm Order
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex justify-between text-gray-700 mt-2">
-                            <p>Shipping</p>
-                            <p>KSH {Shipping}</p>
-                        </div>
-                        <hr className="border-t-2 border-gray-200 my-4" />
-                        <div className="flex justify-between font-bold text-lg">
-                            <p>Total</p>
-                            <p>KSH {total.toLocaleString()}</p>
-                        </div>
-                    </div>
-                    <hr className="border-t-2 border-gray-200 my-4" />
-                    <div className="mt-6">
-                        <button className="w-full bg-blue-800 text-white py-3 rounded-lg text-center font-medium">
-                            Confirm Order
-                        </button>
+                
                     </div>
                 </div>
-    
-            </div>
-        </div>
+            )}
+        </>
+       
     );
 }
 
 export default CheckOut;
+
+

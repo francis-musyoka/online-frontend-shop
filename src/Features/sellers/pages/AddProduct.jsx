@@ -25,7 +25,7 @@ const AddProduct = () => {
             };        
             
         } catch (error) {
-            showToast(error.response.data.error, 'error')
+            showToast(error.response?.data?.error, 'error')
             
         };
         

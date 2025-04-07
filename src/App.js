@@ -33,6 +33,8 @@ import CartProvider from './context/CartContext';
 import Addresses from './Features/customers/pages/Account/Addresses';
 import AddAddress from './Features/customers/component/AddAddress';
 import CheckOut from './Features/customers/pages/CheckOut';
+import AddCategory from './Features/sellers/pages/AddCategory';
+import OrderSummary from './Features/customers/pages/orderSummary';
 
 function App() {
 
@@ -61,9 +63,12 @@ function App() {
                             <Route path={PATH_URL.ADD_ADDRESS} element={<AddAddress/>}/>
                         </Route>
                         <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
+                        <Route path={PATH_URL.CHECK_OUT} element={<CheckOut/>}/>
+                        <Route path={PATH_URL.ORDER_SUMMARY} element={<OrderSummary/>}/>
+                        
                     </Route>
                     </Route>
-                    <Route path={PATH_URL.CHECK_OUT} element={<CheckOut/>}/>
+                    {/* <Route path={PATH_URL.ORDER_SUMMARY} element={<OrderSummary/>}/> */}
                     <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
                     <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
                     <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />
@@ -78,6 +83,7 @@ function App() {
                                 <Route path={PATH_URL.SELL.ADD_PRODUCTS} element={<AddProduct/>}/>
                                 <Route path={PATH_URL.SELL.MY_PRODUCTS} element={<MyProducts/>}/>
                                 <Route path={PATH_URL.SELL.EDIT_PRODUCT} element={<EditProduct/>}/>
+                                <Route path={PATH_URL.SELL.ADD_CATEGORY} element={<AddCategory/>}/>
                             </Route>
                         </Route>    
                     </Route>

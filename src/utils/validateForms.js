@@ -215,7 +215,7 @@ export const validateChangePassword =(password,confirmPassword,currentPassword=n
 };
 
 export const validateAddAddressForm = (formData) => {
-    const {firstName, lastName, address,city,state,zipCode,phoneNumber} =formData
+    const {firstName, lastName, address,city,state,zipCode,apartment,phoneNumber} =formData
     const errors = {};
 
     if (!firstName.trim()) {
@@ -227,6 +227,9 @@ export const validateAddAddressForm = (formData) => {
     }
     if (!address.trim()) {
         errors.address = "Please Enter Address";
+    }
+    if (!apartment.trim()) {
+        errors.apartment = "Please Enter apartment number or name";
     }
 
     if (!city.trim()) {

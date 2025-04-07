@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { axiosInstance, GET_ROUTES, PATH_URL, POST_ROUTES } from '../../../../constant';
 import { useToast } from '../../../../context/ToastContext';
@@ -8,7 +8,7 @@ const Addresses = () => {
     const [addresses,setAddresses] = useState([]);
     const {showToast} = useToast();
 
-    useState(()=>{
+    useEffect(()=>{
         const fetchAddresses = async()=>{
             const {data} = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
             if(data.success){
@@ -28,6 +28,25 @@ const Addresses = () => {
         } catch (error) {
             showToast(error.response?.data?.error ||  "Failed to remove the address", "error");
         };
+    };
+    
+    const handleSetDefaultAddress = async(addressId)=>{
+        try {
+            const {data} = await axiosInstance.post(POST_ROUTES.SET_DEFAULT_ADDRESS(addressId));
+            if(data.success){
+
+                showToast(data?.message, "success");
+
+                setAddresses(prevAddress=>
+                    prevAddress.map((address)=>({
+                        ...address,
+                        isDefault: address.id ===addressId,
+                    }))
+                )
+            }
+        } catch (error) {
+            showToast(error.response?.data?.error || "Failed to update default address")
+        }
     }
     
     return (
@@ -46,6 +65,7 @@ const Addresses = () => {
                             <div className='mt-5'>
                                 <p>{address.firstName} {address.lastName}</p>
                                 <p>{address.address}</p>
+                                <p>{address.apartment}</p>
                                 <p>{address.city}</p>
                                 <p>{address.state}</p>
                                 <p>Kenya</p>
@@ -56,7 +76,13 @@ const Addresses = () => {
                                 <p>|</p>
                                 <button onClick={()=>handleRemove(address.id)} className='text-blue-400 hover:underline'>Remove</button>
                                 <p>|</p>
-                                <button className='text-blue-400 hover:underline'>Set as Default</button>
+                                <button 
+                                    onClick={()=>handleSetDefaultAddress(address.id)}
+                                    disabled={address.isDefault} 
+                                    className={`text-blue-400 hover:underline disabled:cursor-not-allowed disabled:text-secondary disabled:hover:no-underline`}
+                                >
+                                    {address.isDefault ? "Default Address" : "Set as Default"}
+                                </button>
                             </div>
                         </div>
                     )) 

@@ -41,6 +41,14 @@ const Cart = () => {
         [favourite, cartItem]
     );
 
+
+    const handleCheckOutButton =()=>{
+        if(token){
+            navigate(PATH_URL.CHECK_OUT);
+        }else{
+            navigate(PATH_URL.SIGN_IN);
+        }
+    }
     
  
     
@@ -95,7 +103,7 @@ const Cart = () => {
                                 </div>
                             </div>
                             <button
-                                onClick={()=>navigate(PATH_URL.CHECK_OUT)} 
+                                onClick={handleCheckOutButton} 
                                 className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
                             >
                                 Check out

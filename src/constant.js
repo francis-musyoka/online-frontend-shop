@@ -13,6 +13,7 @@ const PATH_URL = {
     REVIEWS_DISPLAY: '',
     ADD_ADDRESS: '/book_address',
     CHECK_OUT: '/checkout/summary',
+    ORDER_SUMMARY: '/order/summary',
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
@@ -26,6 +27,7 @@ const PATH_URL = {
         LOG_IN: '/sell/login',
         PROFILE: '/sell/dashboard/profile',
         MY_PRODUCTS: '/sell/dashboard/myproducts',
+        ADD_CATEGORY: '/sell/dashboard/add-category',
         ADD_PRODUCTS: '/sell/dashboard/add-products',
         EDIT_PRODUCT: '/sell/dashboard/edit-product',
         FORGOT_PASSWORD: '/sell/forgotpassword',
@@ -48,6 +50,12 @@ const POST_ROUTES = {
     DELETE_PRODUCT_FROM_GUEST_CART:(productId)=> `/delete/guestcart/${productId}`,
     ADD_ADDRESS: '/add-new-address',
     DELETE_ADDRESS:(addressId)=>`/remove/address/${addressId}`,
+    SET_DEFAULT_ADDRESS:(addressId) => `/set/address/default/${addressId}`,
+    MPESA_PAYMENT: `/savempesapayment`,
+    DELETE_MPESA_PAYMENT:(id) =>`/delete/mpesapayment/${id}`,
+    MPESA_TRANSCATION: '/stkpush',
+    CREATE_ORDER: "/create/order",
+    CLEAR_CART: "/clear/cart/",
 
 };
 
@@ -64,6 +72,9 @@ const GET_ROUTES = {
     GET_CART: `/cart`,
     GET_GUEST_CART:(guestId) => `/guestcart/${guestId}`,
     GET_ADDRESSES: '/addresses',
+    GET_MPESA_PAYMENT: '/mpesapayment',
+    GET_MPESA_TRANSACTION_STATUS:(transactionId) => `/mpesa/transaction/status/${transactionId}`,
+
 };
   
 const PATCH_ROUTES = {
@@ -72,6 +83,8 @@ const PATCH_ROUTES = {
   UPDATE_CART_QUANTITY:(productId) => `/update/cart/${productId}`,
   UPDATE_GUEST_CART_QUANTITY:(productId) => `/update/guestcart/${productId}`,
   UPDATE_ADDRESS:(addressId) =>`/update/address/${addressId}`,
+  UPDATE_MPESA_PAYMENT:(id) =>`/update/mpesapayment/${id}`,
+  UPDATE_ORDER:(orderId) => `/update/order/${orderId}`
 };
 
 
@@ -104,18 +117,18 @@ const PUT_ROUTES_SHOP ={
 
 //  Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "http://localhost:4000",
   withCredentials: true 
 });
 
-const BASEURL = 'http://localhost:5000'
+const BASEURL = 'http://localhost:4000'
 
 // const axiosInstance = axios.create({
 //   baseURL: "https://frankbackend.cntb.onekana.ke/",
 //   withCredentials: true 
 // });
 
-// const BASEURL = 'https://frankbackend.cntb.onekana.ke/'
+// const BASEURL = 'https://frankbackend.cntb.onekana.ke'
 
 
 

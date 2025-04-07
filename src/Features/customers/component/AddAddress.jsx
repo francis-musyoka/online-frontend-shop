@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { validateAddAddressForm } from '../../../utils/validateForms';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import { axiosInstance, PATCH_ROUTES, PATH_URL, POST_ROUTES } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 
 const AddAddress = (props) => {
-    const {CheckOut} = props
+    const {CheckOut, checkAddress, isEditing,editAddressModel, cancelMode, onAddingAddress } = props
     const location = useLocation();
-    const edit = location.state?.edit || false;
-    const editAddress = location.state?.address || {}
+    const edit = location.state?.edit || isEditing || false;
+    const editAddress = location.state?.address || checkAddress || {}
 
     const [address, setAddress] = useState({
         firstName: editAddress.firstName || "",
         lastName: editAddress.lastName || "",
         address: editAddress.address || "",
+        apartment: editAddress.apartment || "",
         city: editAddress.city || "",
         state: editAddress.state || "",
         zipCode: editAddress.zipCode || "",
@@ -26,11 +27,10 @@ const AddAddress = (props) => {
     const {showToast} = useToast();
     const navigate = useNavigate();
 
+    
+
     const handleChange = (e)=>{
-
         const { name, value } = e.target;
-
-
         setAddress((prev)=>({
             ...prev, [name]: value
         }));
@@ -42,6 +42,8 @@ const AddAddress = (props) => {
         return Object.keys(errors).length === 0;
     };
 
+
+    // ADD NEW ADDRESS
     const handleAddAddress = async()=>{
         console.log('hello');
         
@@ -52,7 +54,16 @@ const AddAddress = (props) => {
                 const {data} = await axiosInstance.post(POST_ROUTES.ADD_ADDRESS, {formData: address});
                 if(data.success){
                     showToast(data.message, 'success');
-                    navigate(PATH_URL.ACCOUNT.ADDRESS)
+                    console.log('HANDLE ADDRESS');
+                    
+                    if(CheckOut){
+                        cancelMode();
+                        // onAddingAddress(prev=>[...prev, address]);
+                        console.log('HANDLE ADDRESS  AND UPDATE');
+                    }else{
+                        navigate(PATH_URL.ACCOUNT.ADDRESS)
+                    }
+                    
                 }
             } catch (error) {
                 showToast(error.response?.data?.error || "Error occured")
@@ -60,21 +71,33 @@ const AddAddress = (props) => {
         }; 
     };
 
-    
+    // HANDLE Edited address
     const handleSaveChanges = async()=>{
 
         const addressId = editAddress.id
         const isFormValid = validateForm();
-
         if(isFormValid){
             try {
                 await axiosInstance.patch(PATCH_ROUTES.UPDATE_ADDRESS(addressId), {formData:address});
                 showToast("Address updated succefully", 'success');
-                navigate(PATH_URL.ACCOUNT.ADDRESS)
-    
+                if(CheckOut){
+                    cancelMode();
+                    editAddressModel();
+                }else{
+                    navigate(PATH_URL.ACCOUNT.ADDRESS)
+                }
             } catch (error) {
                 showToast(error.response?.data?.error || 'Failed to updated the Address');
             };
+        }
+    }
+
+    const handleCancel = ()=>{
+        if(CheckOut){
+            cancelMode();
+            editAddressModel();
+        }else{
+            navigate(PATH_URL.ACCOUNT.ADDRESS)
         }
     }
     
@@ -161,12 +184,12 @@ const AddAddress = (props) => {
                         <input
                             type="text"
                             name="apartment"
-                            // value={address.address}
-                            // onChange={handleChange}
+                            value={address.apartment}
+                            onChange={handleChange}
                             className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         />
                         
-                        {formErrors.address && <span className="text-red-700 text-xs">{formErrors.address}</span>}
+                        {formErrors.apartment && <span className="text-red-700 text-xs">{formErrors.apartment}</span>}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
@@ -261,12 +284,12 @@ const AddAddress = (props) => {
 
 
             <div className="flex justify-between my-10">
-                <Link
-                    to={PATH_URL.ACCOUNT.ADDRESS}
+                <button
+                onClick={handleCancel}
                     className="py-1 px-4 border border-neutral bg-white text-neutral hover:bg-tertiary"
                 >
                     Cancel
-                </Link>
+                </button>
 
                 {edit ? (
                     <button
