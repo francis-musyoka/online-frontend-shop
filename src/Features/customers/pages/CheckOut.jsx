@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { axiosInstance, BASEURL, GET_ROUTES, POST_ROUTES } from '../../../constant';
 import SelectAddress from '../component/SelectAddress';
 import { useCartContext } from '../../../context/CartContext';
-import MpesaForm from './MpesaForm';
 import { useToast } from '../../../context/ToastContext';
 import { pullTransactionStatus } from '../../../utils/pullTransactionStatus';
 import Spinning from '../../../components/Spinning';
+import { useNavigate } from 'react-router-dom';
+import MpesaForm from "./MpesaForm"
 
 const CheckOut = () => {
+    
 
     const [allAddresses, setAllAddresses] = useState([]);
     const [onChangingAddress, setOnChangingAddress] = useState(false);
@@ -29,7 +31,7 @@ const CheckOut = () => {
 
     const { cartItem,totalAmount,} = useCartContext();
     const {showToast} = useToast();
-    
+    const navigate = useNavigate();
     useEffect(()=>{
         const fetchAddresses = async()=>{
             const {data} = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
@@ -58,6 +60,7 @@ const CheckOut = () => {
     }, [paymentDetails]);
 
     
+    
     useEffect(()=>{
         if(!selectedAddress && allAddresses?.length){
             const selectAddress = allAddresses?.find(address => address.isDefault) || allAddresses?.[0]
@@ -72,6 +75,7 @@ const CheckOut = () => {
         localStorage.setItem('selectedAddress', JSON.stringify(address));
     }
 
+    
     const Shipping = 0;
     const total = totalAmount + Shipping;
 
@@ -87,7 +91,6 @@ const CheckOut = () => {
             localStorage.removeItem("lastTransactionId");
         }
     },[pollStatus]);
-    
   
     
     const confirmOrderButton = async()=>{
@@ -98,14 +101,22 @@ const CheckOut = () => {
                 price: item.Product.price,
                 productId: item.productId,
                 quantity: item.quantity,
+                image:item.Product.image[0],
             }));
+
+            const { id, isDefault, firstName, lastName, ...rest } = selectedAddress;
+            const shippingAddress = {
+            ...rest,
+            fullName: `${firstName} ${lastName}`,
+            };
 
             try {
                 // Create Order
                 setIsProcessing(true)
                 const orderResponse = await axiosInstance.post(POST_ROUTES.CREATE_ORDER,{
                     items,
-                    paymentMethod 
+                    paymentMethod,
+                    shippingAddress,
                 });
 
                 if(orderResponse.data.success){
@@ -124,7 +135,7 @@ const CheckOut = () => {
                         showToast('Please check your phone and enter your M-Pesa PIN.', 'success');
 
                          // Start polling for transaction status
-                        pullTransactionStatus(transactionId, showToast,setPollStatus,orderNumber)
+                        pullTransactionStatus(transactionId, showToast,setPollStatus,orderNumber, navigate)
                     };
                 }
                 
@@ -197,14 +208,14 @@ const CheckOut = () => {
                                 <h1 className='text-black text-xl font-medium'>Payment Methods</h1>
         
                                 <div className='flex mt-4 space-x-8'>
-                                    <label htmlFor="mpesa" className="flex items-center space-x-3">
+                                    <label htmlFor="M-pesa" className="flex items-center space-x-3">
                                         <input 
                                             type="radio" 
                                             name='payment'
-                                            id='mpesa'
-                                            value='mpesa'
-                                            checked={paymentMethod === "mpesa"}
-                                            onChange={()=>handlePaymentMethod('mpesa')}
+                                            id='M-pesa'
+                                            value='M-pesa'
+                                            checked={paymentMethod === "M-Pesa"}
+                                            onChange={()=>handlePaymentMethod('M-Pesa')}
                                             className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                                         />
                                         <span className="text-xl text-gray-950">M-Pesa</span>
@@ -215,16 +226,16 @@ const CheckOut = () => {
                                             name='payment'
                                             id = 'card'
                                             value='card'
-                                            checked={paymentMethod === "card"}
-                                            onChange={()=>handlePaymentMethod('card')}
+                                            checked={paymentMethod === "Card"}
+                                            onChange={()=>handlePaymentMethod('Card')}
                                             className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" />
                                         <span className="text-xl text-gray-950">Card</span>
                                     </label>
                                 </div>
-                                {paymentMethod === "mpesa" ? (
+                                {paymentMethod === "M-Pesa" ? (
                                     <MpesaForm paymentDetails={paymentDetails} setPaymentDetails= {setPaymentDetails} />
-                                    ): paymentMethod === "card" ? (
-                                    <h1>card coming soon</h1>
+                                    ): paymentMethod === "Card" ? (
+                                    <h1> Card coming soon</h1>
                                 ):(<></>)}
                             </div>
                         </div>

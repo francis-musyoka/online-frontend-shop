@@ -1,7 +1,7 @@
-import { axiosInstance, GET_ROUTES, PATCH_ROUTES, POST_ROUTES } from "../constant";
+import { axiosInstance, GET_ROUTES, PATCH_ROUTES, PATH_URL, POST_ROUTES } from "../constant";
 
 
-export const pullTransactionStatus = async(transactionId, showToast,setPollStatus,orderNumber)=>{
+export const pullTransactionStatus = async(transactionId, showToast,setPollStatus,orderNumber,navigate)=>{
     
     const maxAttempts = 3; // Limit number of retries
     const interval = 30000; // Check every 5 seconds
@@ -16,22 +16,36 @@ export const pullTransactionStatus = async(transactionId, showToast,setPollStatu
             const {data} = await axiosInstance.get(GET_ROUTES.GET_MPESA_TRANSACTION_STATUS(transactionId));
             if(data.success){
                 if(data.transactionDetails.status === 'completed'){
+                    console.log('I am in success Block');
+                    
                     showToast("Payment successful! Your order has been placed.", "success");
                     setPollStatus('success');
                     //  await updateOrder(orderNumber,showToast)
                     try {
                         const response = await axiosInstance.patch(PATCH_ROUTES.UPDATE_ORDER(orderNumber));
                         if (response.data.success) {
+                            console.log('I Have Updated order successfully');
                             showToast("Order has been successfully updated.", "success");
                             // You can also handle any other logic, such as redirecting or clearing the cart, etc.
                         } 
                     } catch (error) {
                         console.error("Error updating order:", error);
+                        
                         showToast("An error occurred while updating your order. Please try again.", "error");
                     };
-
-                    await axiosInstance.patch(POST_ROUTES.CLEAR_CART);
+                    try {
+                       const clearCartResponst = await axiosInstance.post(POST_ROUTES.CLEAR_CART);
+                       if(clearCartResponst.data.success){
+                        console.log('I Have cleara cart successfully');
+                       }
+                    } catch (error) {
+                        
+                        console.log("Error clearing cart",error);
+                        
+                    };
                 
+                    navigate(`${PATH_URL.ORDER_SUMMARY(orderNumber)}?view=summary`);
+                    
                     return;
 
                 }else if(data.transactionDetails.status === 'failed'  ){

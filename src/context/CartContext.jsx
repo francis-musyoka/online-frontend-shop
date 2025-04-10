@@ -24,7 +24,6 @@ const CartProvider = (props) => {
         const fetchCart = async()=>{
             try {
                 if(token){
-
                     // Fetch logged-in user cart
                     const response = await axiosInstance.get(GET_ROUTES.GET_CART);
                     if(response.data.success){
@@ -134,7 +133,7 @@ const CartProvider = (props) => {
             }else if(guestId){
                 await axiosInstance.post(POST_ROUTES.DELETE_PRODUCT_FROM_GUEST_CART(productId),{guestId});
             }
-           
+            
             setCartItem(cartItem.filter((product)=> product.productId !== productId));
             
         } catch (error) {

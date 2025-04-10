@@ -12,13 +12,13 @@ const SelectAddress = (props) => {
     const numberOfAddress = addresses.length;
    
     const {showToast} = useToast();
+    
     const handleEdit = (address)=>{
         setCheckOut(true)
         setIsEditing(true)
         setEditAddress(address)
     };
 
-    
     const handleSelect =(address)=>{
         setSelectedAddress(address)
     };

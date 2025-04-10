@@ -74,7 +74,7 @@ const Home = () => {
                                         {cartItem.some(items => items.productId === product.id) ? (
                                             <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity}/> 
                                         ): (
-                                            <Button label="Add to Cart" variant="primary" size="medium" onClick={()=>handleClick(product.id)} />
+                                            <Button label="Add to Cart" variant="primary" size="small" onClick={()=>handleClick(product.id)} />
                                         )}
                                     </div>
                                 </div>

@@ -17,7 +17,7 @@ const ResetShopPassword = () => {
                 navigate(PATH_URL.SELL.LOG_IN);
             }
         } catch (error) {
-            showToast(error.response.data.error);
+            showToast(error?.response?.data?.error);
         };    
     };
     

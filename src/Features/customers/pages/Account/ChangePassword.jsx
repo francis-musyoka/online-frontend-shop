@@ -44,7 +44,7 @@ const ChangePassword = ({closeModal, user}) => {
                 <p className="block text-base font-normal text-gray-700 mb-6">
                         Your new password must be different from previous password.
                 </p> 
-                {/* <hr className='my-3 '/> */}
+                <hr className='my-3 '/>
                 <div className="mb-3">
                     <label className="block text-sm font-medium text-gray-700">
                         Current Password

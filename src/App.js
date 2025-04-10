@@ -64,7 +64,7 @@ function App() {
                         </Route>
                         <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
                         <Route path={PATH_URL.CHECK_OUT} element={<CheckOut/>}/>
-                        <Route path={PATH_URL.ORDER_SUMMARY} element={<OrderSummary/>}/>
+                        <Route path="/orders/:orderNumber" element={<OrderSummary/>}/>
                         
                     </Route>
                     </Route>

@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useCallback, useState} from "react";
 import { createContext,useContext } from "react";
 
 const ToastContext = createContext();
@@ -7,12 +7,12 @@ const ToastProvider = ({ children }) => {
     const [toast, setToast] = useState(null); 
 
     // Function to show toast message
-    const showToast = (message, type) => {
+    const showToast = useCallback((message, type) => {
         setToast({ message, type });
         setTimeout(() => {
             setToast(null); 
         }, 6000);
-    };
+    },[]);
     
     return (
         <ToastContext.Provider value={{ showToast }}>

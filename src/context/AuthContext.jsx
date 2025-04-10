@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { createContext } from 'react';
 import { axiosInstance, GET_ROUTES, PATH_URL, POST_ROUTES } from '../constant';
@@ -10,26 +10,13 @@ const AuthContext = createContext();
 
 
 const AuthProvider = ({children}) => {
-    const [token, setToken] = useState(sessionStorage.getItem('token') ||'');
-    const [user, setUser] = useState('');
+    const [token, setToken] = useState(sessionStorage.getItem('token') || null);
+    const [user, setUser] = useState(null);
     const {showToast} = useToast();
     const navigate = useNavigate();
 
     const guestId = localStorage.getItem('guestId') || null;
 
-    
-    
-    useEffect(()=>{
-        if(token){
-            const fetchUserProfile =async()=>{
-                const response = await axiosInstance.get(`${GET_ROUTES.GET_USER_PROFILE}`);
-                if(response.data.success){
-                    setUser(response.data.user)
-                };
-            };
-            fetchUserProfile();
-        };
-    },[token,setUser]);
 
     const logInAction =async(email,password)=>{
         try {
@@ -43,26 +30,54 @@ const AuthProvider = ({children}) => {
             };
             
         } catch (error) {
-            showToast(error.response.data.error, 'error')
-            console.log(error);
+            showToast(error.response?.data?.error || "Sign in failed", 'error');
         };
     };
 
-    const logOutAction = async()=>{
+    const logOutAction = useCallback( async()=>{
         const response = await axiosInstance.get(`${GET_ROUTES.LOGOUT}`);
         try {
             if(response.data.success){
-                setToken('');
-                setUser('')
+                setToken(null);
+                setUser(null)
                 sessionStorage.clear();
                 showToast('Log Out Successfully', 'success')
                 navigate(PATH_URL.SIGN_IN);
             };
         } catch (error) {
-            showToast(error.response.data.error, 'error')
+            showToast(error.response?.data?.error  || "Log out failed", 'error')
         }
        
-    };
+    },[]);
+
+
+    useEffect(()=>{
+        console.log("getting user Data");
+        
+        const fetchUserProfile =async()=>{
+            console.log("Inside Fetch user profile");
+            try {
+                
+                const response = await axiosInstance.get(`${GET_ROUTES.GET_USER_PROFILE}`);
+                
+                if(response.data.success){
+                    setUser(response.data.user)
+                };
+            } catch (error) {
+                console.log(error.response);
+                
+                if(error.response?.status === 500 || error.response?.status === 401){
+                    showToast('Session has expired. Please log in again.')
+                    await logOutAction();
+                };
+            };
+        };
+
+        if(token){
+            fetchUserProfile();
+        };
+      
+    },[token,showToast,logOutAction]);
 
  
     

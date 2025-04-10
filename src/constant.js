@@ -13,7 +13,8 @@ const PATH_URL = {
     REVIEWS_DISPLAY: '',
     ADD_ADDRESS: '/book_address',
     CHECK_OUT: '/checkout/summary',
-    ORDER_SUMMARY: '/order/summary',
+    ORDER_SUMMARY:(orderNumber) => `/orders/${orderNumber}`,
+
     ACCOUNT: {
         BASE: '/account',
         PROFILE: '/account/profile',
@@ -55,7 +56,7 @@ const POST_ROUTES = {
     DELETE_MPESA_PAYMENT:(id) =>`/delete/mpesapayment/${id}`,
     MPESA_TRANSCATION: '/stkpush',
     CREATE_ORDER: "/create/order",
-    CLEAR_CART: "/clear/cart/",
+    CLEAR_CART: "/clear/cart",
 
 };
 
@@ -74,6 +75,7 @@ const GET_ROUTES = {
     GET_ADDRESSES: '/addresses',
     GET_MPESA_PAYMENT: '/mpesapayment',
     GET_MPESA_TRANSACTION_STATUS:(transactionId) => `/mpesa/transaction/status/${transactionId}`,
+    GET_ORDER_SUMMARY:(orderId)=> `/order/summary/${orderId}`
 
 };
   
