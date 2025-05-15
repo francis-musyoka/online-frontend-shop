@@ -11,45 +11,45 @@ const Profile = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [edit, setEdit] = useState(false);
-    const [formErrors ,setFormErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
-    const {user} = useAuth();
 
-    useEffect(()=>{
-        if(user){
-            setFirstName(user.firstName);
-            setLastName(user.lastName);
-            setEmail(user.email)
+    const { user } = useAuth();
+    useEffect(() => {
+        if (user) {
+            setFirstName(user?.firstName);
+            setLastName(user?.lastName);
+            setEmail(user?.email)
         }
-    },[user]);
+    }, [user]);
 
-    const validateForm = ()=>{
-        const error = validateUpdateForm(firstName,lastName,email);
-            
+
+    const validateForm = () => {
+        const error = validateUpdateForm(firstName, lastName, email);
+
         setFormErrors(error);
         return Object.keys(error).length < 1
     }
-   
-    const handleSubmit = async()=>{
-        const isValid =  validateForm(); 
-        if(isValid){
+
+    const handleSubmit = async () => {
+        const isValid = validateForm();
+        if (isValid) {
             try {
-                const response = await axiosInstance.patch(`${PATCH_ROUTES.UPDATE_USER_PROFILE(user.id)}`,{
-                    firstName,lastName,email
+                const response = await axiosInstance.patch(`${PATCH_ROUTES.UPDATE_USER_PROFILE(user.id)}`, {
+                    firstName, lastName, email
                 })
-                if(response.data.success === true){
+                if (response.data.success === true) {
                     setEdit(false)
                 }
-                 
+
             } catch (error) {
                 console.log(error);
-                
+
             }
-            
+
         }
     }
-    
+
     return (
         <>
             <div className="max-w-screen-lg mx-auto mt-10 p-4 sm:p-6 bg-white shadow-lg rounded-lg relative">
@@ -83,15 +83,15 @@ const Profile = () => {
 
                 <div className="flex items-center space-x-4 mt-4">
                     <img
-                        src={user.profilePicture || 'https://via.placeholder.com/150'}
+                        src={user?.profilePicture ?? 'https://via.placeholder.com/150'}
                         alt="User"
                         className="w-16 h-16 sm:w-16 sm:h-16 rounded-full"
                     />
                     <div>
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
-                            {user.firstName} {user.lastName}
+                            {user?.firstName} {user?.lastName}
                         </h3>
-                        <p className="text-sm sm:text-lg text-gray-600">{user.email}</p>
+                        <p className="text-sm sm:text-lg text-gray-600">{user?.email}</p>
 
                         <button
                             onClick={() => setIsModalOpen(true)}
@@ -100,9 +100,9 @@ const Profile = () => {
                             CHANGE PASSWORD
                         </button>
                     </div>
-                
+
                 </div>
-            
+
 
                 <div className="mt-6">
                     <h4 className="text-lg sm:text-xl font-semibold text-gray-800">Profile Information</h4>
@@ -177,17 +177,17 @@ const Profile = () => {
                             {formErrors.email && <span className="text-red-700 text-xs">{formErrors.email}</span>}
                         </div>
 
-                    
+
                     </div>
                 </div>
-                
+
             </div>
             {isModalOpen && (
-                    <ChangePassword
-                        closeModal={() => setIsModalOpen(false)}
-                        user = {user}
-                    />
-                )
+                <ChangePassword
+                    closeModal={() => setIsModalOpen(false)}
+                    user={user}
+                />
+            )
             }
 
         </>

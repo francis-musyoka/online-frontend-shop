@@ -2,36 +2,41 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
+import { useShopAuth } from '../../../context/ShopAuthContext';
 
 
 const MyProducts = () => {
 
-    const [product,setProduct] = useState([]);
-    const {showToast} = useToast();
+    const [product, setProduct] = useState([]);
+    const { showToast } = useToast();
+    const { shopToken } = useShopAuth();
 
-    useEffect(()=>{
-        const getProducts = async()=>{
-            const {data} = await axiosInstance.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
-            if(data.success){
+    useEffect(() => {
+        const getProducts = async () => {
+            const { data } = await axiosInstance.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
+            if (data.success) {
                 setProduct(data.shopProducts)
             }
-            
         };
-        getProducts();
-    },[setProduct]);
+        if (shopToken) {
+            getProducts();
+        }
+
+    }, [setProduct, shopToken]);
 
 
-    const handleDelete = async(productId)=>{
+
+    const handleDelete = async (productId) => {
         try {
             const response = await axiosInstance.post(POST_ROUTES_SHOP.DELETE_PRODUCT(productId));
-            if(response.status===204){
+            if (response.status === 204) {
                 showToast('Product delete successfully', 'success')
             }
         } catch (error) {
             showToast(error.response.data.error, 'error')
         };
     };
- 
+
     return (
         <div>
             {
@@ -56,7 +61,7 @@ const MyProducts = () => {
                                         Price
                                     </th>
                                     <th scope="col" className="px-6 py-3">
-                                       Status
+                                        Status
                                     </th>
                                     <th scope="col" className="px-6 py-3">
                                         Action
@@ -65,10 +70,10 @@ const MyProducts = () => {
                             </thead>
                             <tbody>
                                 {
-                                    product.map((product)=>(
+                                    product.map((product) => (
                                         <tr key={product.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                             <td className="p-4">
-                                                <img src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null} className="w-10 md:w-32 max-w-20 max-h-20" alt="Apple Watch"/>
+                                                <img src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null} className="w-10 md:w-32 max-w-20 max-h-20" alt="Apple Watch" />
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white " >
                                                 {product.productName}
@@ -77,21 +82,21 @@ const MyProducts = () => {
                                                 {product.quantity}
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                                            {product.Category.name}
+                                                {product.categories.name}
                                             </td>
                                             <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
                                                 Ksh  {product.price.toLocaleString()}
                                             </td>
-                                            <td className={`${product.status === 'Available' ? 'text-green-400 dark:text-green-300' : product.status === "Out-of-Stock" ? 'text-red-500 dark:text-red-400'  : 'text-yellow-500 dark:text-yellow-400' } px-6 py-4 font-semibold`}
-                                                >
+                                            <td className={`${product.status === 'Available' ? 'text-green-400 dark:text-green-300' : product.status === "Out-of-Stock" ? 'text-red-500 dark:text-red-400' : 'text-yellow-500 dark:text-yellow-400'} px-6 py-4 font-semibold`}
+                                            >
                                                 {product.status}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} state={{productId:product.id}} className=" text-lime-400 px-4 py-2 hover:underline">
+                                                <Link to={PATH_URL.SELL.EDIT_PRODUCT} state={{ productId: product.id }} className=" text-lime-400 px-4 py-2 hover:underline">
                                                     Edit
                                                 </Link>
-                                                <button 
-                                                    onClick={()=>handleDelete(product.id)}
+                                                <button
+                                                    onClick={() => handleDelete(product.id)}
                                                     className="font-medium px-4 py-2 text-red-600 dark:text-red-500 hover:underline">
                                                     Delete
                                                 </button>
@@ -99,7 +104,7 @@ const MyProducts = () => {
                                         </tr>
                                     ))
                                 }
-                               
+
                             </tbody>
                         </table>
 
@@ -108,7 +113,7 @@ const MyProducts = () => {
                     <h1> No product found</h1>
                 )
             }
-         
+
         </div>
     );
 }

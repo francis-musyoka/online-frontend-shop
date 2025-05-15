@@ -1,14 +1,13 @@
 import { axiosInstance, GET_ROUTES, PATCH_ROUTES, PATH_URL, POST_ROUTES } from "../constant";
 
 
-export const pullTransactionStatus = async(transactionId, showToast,setPollStatus,orderNumber,navigate)=>{
+export const pollTransactionStatus = async(transactionId, showToast,setPollStatus,orderNumber,navigate)=>{
     
     const maxAttempts = 3; // Limit number of retries
     const interval = 30000; // Check every 5 seconds
     setPollStatus('checking')
     const checkStatus = async (attempts = 0 ) => {
         if(attempts > maxAttempts){
-            showToast("Payment processing timed out. Check your M-Pesa app.", "warning");
             setPollStatus('timeout');
             return
         };
@@ -42,14 +41,13 @@ export const pullTransactionStatus = async(transactionId, showToast,setPollStatu
                         
                         console.log("Error clearing cart",error);
                         
-                    };
+                    }
                 
-                    navigate(`${PATH_URL.ORDER_SUMMARY(orderNumber)}?view=summary`);
-                    
+                    navigate(PATH_URL.ORDER_SUMMARY)
                     return;
 
                 }else if(data.transactionDetails.status === 'failed'  ){
-                    showToast("Payment failed. Please try again.", "error");
+                    showToast("Payment cancelled. Please try again.", "error");
                     setPollStatus('failed');
                     return;
                 }else{
@@ -67,18 +65,53 @@ export const pullTransactionStatus = async(transactionId, showToast,setPollStatu
 };
 
 
-// const updateOrder = async(orderNumber,showToast)=>{
-//     try {
-//         const response = await axiosInstance.patch(PATCH_ROUTES.UPDATE_ORDER(orderNumber));
+export const CheckStatusAgain = async(transactionId, showToast,setPollStatus,orderNumber,navigate)=>{
+    
+        try {
+            const {data} = await axiosInstance.get(GET_ROUTES.GET_MPESA_TRANSACTION_STATUS(transactionId));
+            if(data.success){
+                if(data.transactionDetails.status === 'completed'){
+                    setPollStatus('success');
+                    //  await updateOrder(orderNumber,showToast)
+                    try {
+                        const response = await axiosInstance.patch(PATCH_ROUTES.UPDATE_ORDER(orderNumber));
+                        if (response.data.success) {
+                            console.log('I Have Updated order successfully');
+                            showToast("Order has been successfully updated.", "success");
+                            // You can also handle any other logic, such as redirecting or clearing the cart, etc.
+                        } 
+                    } catch (error) {
+                        console.error("Error updating order:", error);
+                        
+                        showToast("An error occurred while updating your order. Please try again.", "error");
+                    };
+                    try {
+                       const clearCartResponst = await axiosInstance.post(POST_ROUTES.CLEAR_CART);
+                       if(clearCartResponst.data.success){
+                       }
+                    } catch (error) {
+                        
+                        console.log("Error clearing cart",error);
+                        
+                    }
+                    navigate(PATH_URL.ORDER_SUMMARY)
+                    return;
 
-//         if (response.data.success) {
-//             showToast("Order has been successfully updated.", "success");
-//             // You can also handle any other logic, such as redirecting or clearing the cart, etc.
-//         } else {
-//             showToast("Failed to update the order.", "error");
-//         }
-//     } catch (error) {
-//         console.error("Error updating order:", error);
-//         showToast("An error occurred while updating your order. Please try again.", "error");
-//     }
-// }
+                }else if(data.transactionDetails.status === 'failed'  ){
+                    showToast("Payment cancelled. Please try again.", "error");
+                    setPollStatus('failed');
+                    return;
+                }else{
+                    showToast("Payment was not completed. Please try again.", "error");
+                    setPollStatus('failed');
+                    return;
+                }
+            };
+        } catch (error) {
+            showToast(error.response?.data?.error || "Error checking transaction status" , "error");
+            setPollStatus('failed');
+            console.log("Error checking transaction status:", error);
+        }
+    };
+
+

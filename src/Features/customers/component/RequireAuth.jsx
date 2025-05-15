@@ -4,17 +4,17 @@ import { PATH_URL } from '../../../constant';
 import { useAuth } from '../../../context/AuthContext';
 
 const RequireAuth = () => {
-    const {token} = useAuth();
+    const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
-    useEffect(()=>{
-        if(!token){
+    useEffect(() => {
+        if (!isAuthenticated) {
             return navigate(PATH_URL.SIGN_IN)
         }
-    },[navigate,token]);
+    }, [navigate, isAuthenticated]);
 
     return (
-        <Outlet/>
+        <Outlet />
     );
 }
 

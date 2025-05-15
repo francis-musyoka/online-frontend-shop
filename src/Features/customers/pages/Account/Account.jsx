@@ -13,8 +13,8 @@ import { useAuth } from '../../../../context/AuthContext';
 
 const Account = () => {
     const [selectedOption, setSelectedOption] = useState("My Profile");
-    const {status:isDropdownOpen, handleStatus:toggleDropdown} = useHooks();
-    const {logOutAction} = useAuth();
+    const { status: isDropdownOpen, handleStatus: toggleDropdown } = useHooks();
+    const { logOutAction } = useAuth();
 
     // Function to handle option selection
     const handleOptionClick = (option) => {
@@ -22,7 +22,7 @@ const Account = () => {
         toggleDropdown()     // Close the dropdown after selecting
     };
 
-    const handleLogOut = ()=>{
+    const handleLogOut = () => {
         logOutAction()
     }
 
@@ -42,8 +42,10 @@ const Account = () => {
 
                     {isDropdownOpen && (
                         <div className="absolute w-full mt-2 border rounded-lg bg-white dark:bg-gray-200 shadow-lg z-10">
-                            <NavLink 
-                                to = "profile"
+                            <NavLink
+                                to="/account/profile"
+
+
                                 onClick={() => handleOptionClick("My Profile")}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
                             >
@@ -52,7 +54,7 @@ const Account = () => {
                             </NavLink>
 
                             <NavLink
-                                to = "addresses"
+                                to="addresses"
                                 onClick={() => handleOptionClick("Your Addresses")}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
                             >
@@ -60,7 +62,7 @@ const Account = () => {
                                 Your Addresses
                             </NavLink>
                             <NavLink
-                                to = "orders"
+                                to="orders"
                                 onClick={() => handleOptionClick("My Orders")}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
                             >
@@ -69,7 +71,7 @@ const Account = () => {
                             </NavLink>
 
                             <NavLink
-                                to = "favourites"
+                                to="favourites"
                                 onClick={() => handleOptionClick(`My Favourites`)}
                                 className="block px-4 py-3 hover:bg-gray-100 transition duration-300 ease-in-out w-full text-left"
                             >
@@ -89,7 +91,7 @@ const Account = () => {
                 </div>
             </div>
 
-            
+
             <div className="hidden md:flex flex-col space-y-4 text-lg font-medium text-gray-700 dark:text-black md:w-1/4 m-8" >
                 <NavLink
                     to="profile"

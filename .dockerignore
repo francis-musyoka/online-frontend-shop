@@ -1,4 +1,5 @@
 node_modules
 build
 .gitignore
-.env
+.env.development
+.env.production

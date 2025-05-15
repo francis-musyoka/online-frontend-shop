@@ -3,71 +3,71 @@
 @tailwind utilities;
 
 @layer components {
-    .btn {
-        font-family: Arial, sans-serif;
-        font-weight: 500;
-        border-radius: 8px;
-        text-align: center;
-        display: inline-block;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        text-decoration: none;
-      }
-      
-      .btn-primary {
-        background-color: theme('colors.primary');
-        color: white;
-      }
-      
-      .btn-primary:hover {
-        background-color: #357ac8;
-      }
-      
-      .btn-secondary {
-        background-color: theme('colors.secondary');
-        color: black;
-      }
-      
-      .btn-secondary:hover {
-        background-color: #e0a806;
-      }
-      
-      .btn-tertiary {
-        background-color: theme('colors.tertiary');
-        color: black;
-      }
-      
-      .btn-tertiary:hover {
-        background-color: #e4e4e4;
-      }
-      
-      .btn-neutral {
-        background-color: theme('colors.neutral');
-        color: white;
-      }
-      
-      .btn-neutral:hover {
-        background-color: #000000;
-      }
-      
-      .btn-disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      
-      .btn-small {
-        padding: 2px 12px;
-        font-size: 0.75rem;
-      }
-      
-      .btn-medium {
-        padding: 10px 20px;
-        font-size: 1rem;
-      }
-      
-      .btn-large {
-        padding: 12px 28px;
-        font-size: 1.25rem;
-      }
-      
+  .btn {
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background-color: theme('colors.primary');
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #357ac8;
+  }
+
+  .btn-secondary {
+    background-color: theme('colors.secondary');
+    color: black;
+  }
+
+  .btn-secondary:hover {
+    background-color: #e0a806;
+  }
+
+  .btn-tertiary {
+    background-color: theme('colors.tertiary');
+    color: black;
+  }
+
+  .btn-tertiary:hover {
+    background-color: #e4e4e4;
+  }
+
+  .btn-neutral {
+    background-color: theme('colors.neutral');
+    color: white;
+  }
+
+  .btn-neutral:hover {
+    background-color: #000000;
+  }
+
+  .btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .btn-small {
+    padding: 2px 12px;
+    font-size: 0.75rem;
+  }
+
+  .btn-medium {
+    padding: 8px 10px;
+    font-size: 1rem;
+  }
+
+  .btn-large {
+    padding: 12px 28px;
+    font-size: 1.25rem;
+  }
+
 }

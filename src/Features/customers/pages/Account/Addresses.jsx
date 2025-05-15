@@ -5,42 +5,47 @@ import { useToast } from '../../../../context/ToastContext';
 
 const Addresses = () => {
 
-    const [addresses,setAddresses] = useState([]);
-    const {showToast} = useToast();
+    const [addresses, setAddresses] = useState([]);
+    const { showToast } = useToast();
 
-    useEffect(()=>{
-        const fetchAddresses = async()=>{
-            const {data} = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
-            if(data.success){
+    useEffect(() => {
+        const fetchAddresses = async () => {
+            const { data } = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
+            if (data.success) {
                 setAddresses(data.addresses);
             };
         };
         fetchAddresses();
-    },[]);
+    }, []);
 
-    const handleRemove = async(addressId)=>{
+    useEffect(() => {
+        console.log('NO DEPENDANCESS  ADDRESS ...................');
+
+    }, []);
+
+    const handleRemove = async (addressId) => {
         try {
             await axiosInstance.post(POST_ROUTES.DELETE_ADDRESS(addressId));
-            setAddresses((prevAddress)=>
-                prevAddress.filter((address)=> address.id !== addressId)
+            setAddresses((prevAddress) =>
+                prevAddress.filter((address) => address.id !== addressId)
             );
             showToast("Address removed successfully", "success");
         } catch (error) {
-            showToast(error.response?.data?.error ||  "Failed to remove the address", "error");
+            showToast(error.response?.data?.error || "Failed to remove the address", "error");
         };
     };
-    
-    const handleSetDefaultAddress = async(addressId)=>{
+
+    const handleSetDefaultAddress = async (addressId) => {
         try {
-            const {data} = await axiosInstance.post(POST_ROUTES.SET_DEFAULT_ADDRESS(addressId));
-            if(data.success){
+            const { data } = await axiosInstance.post(POST_ROUTES.SET_DEFAULT_ADDRESS(addressId));
+            if (data.success) {
 
                 showToast(data?.message, "success");
 
-                setAddresses(prevAddress=>
-                    prevAddress.map((address)=>({
+                setAddresses(prevAddress =>
+                    prevAddress.map((address) => ({
                         ...address,
-                        isDefault: address.id ===addressId,
+                        isDefault: address.id === addressId,
                     }))
                 )
             }
@@ -48,7 +53,7 @@ const Addresses = () => {
             showToast(error.response?.data?.error || "Failed to update default address")
         }
     }
-    
+
     return (
         <div>
             <h3 className="text-4xl font-bold text-gray-900 dark:text-black mb-2 m-8">Your Addresses</h3>
@@ -60,7 +65,7 @@ const Addresses = () => {
                 </div>
 
                 {addresses && addresses.length > 0 ? (
-                    addresses.map(address=>(
+                    addresses.map(address => (
                         <div key={address.id} className="flex flex-col border-2 border-gray-400 border-dashed rounded-md px-6">
                             <div className='mt-5'>
                                 <p>{address.firstName} {address.lastName}</p>
@@ -70,28 +75,28 @@ const Addresses = () => {
                                 <p>{address.state}</p>
                                 <p>Kenya</p>
                                 <p>Phone Number: {address.phoneNumber}</p>
-                           </div>
+                            </div>
                             <div className='flex justify-between mt-6 mb-4 '>
-                                <Link  to={PATH_URL.ADD_ADDRESS} state={{address:address, edit:true}} className='text-blue-400 hover:underline'>Edit</Link>
+                                <Link to={PATH_URL.ADD_ADDRESS} state={{ address: address, edit: true }} className='text-blue-400 hover:underline'>Edit</Link>
                                 <p>|</p>
-                                <button onClick={()=>handleRemove(address.id)} className='text-blue-400 hover:underline'>Remove</button>
+                                <button onClick={() => handleRemove(address.id)} className='text-blue-400 hover:underline'>Remove</button>
                                 <p>|</p>
-                                <button 
-                                    onClick={()=>handleSetDefaultAddress(address.id)}
-                                    disabled={address.isDefault} 
+                                <button
+                                    onClick={() => handleSetDefaultAddress(address.id)}
+                                    disabled={address.isDefault}
                                     className={`text-blue-400 hover:underline disabled:cursor-not-allowed disabled:text-secondary disabled:hover:no-underline`}
                                 >
                                     {address.isDefault ? "Default Address" : "Set as Default"}
                                 </button>
                             </div>
                         </div>
-                    )) 
-                ):(<></>)
+                    ))
+                ) : (<></>)
                 }
             </div>
 
 
-            
+
         </div>
     );
 }

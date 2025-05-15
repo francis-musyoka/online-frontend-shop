@@ -1,5 +1,5 @@
 import './App.css'
-import {BrowserRouter,Route, Routes,Outlet} from 'react-router-dom'
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router-dom'
 import Home from './Features/customers/pages/Home';
 import Categories from './Features/customers/pages/Categories';
 import SignIn from './Features/customers/pages/SignIn';
@@ -35,66 +35,66 @@ import AddAddress from './Features/customers/component/AddAddress';
 import CheckOut from './Features/customers/pages/CheckOut';
 import AddCategory from './Features/sellers/pages/AddCategory';
 import OrderSummary from './Features/customers/pages/orderSummary';
+import Email from './Features/customers/pages/email';
 
 function App() {
 
- 
-  return (
-    <>
-        <BrowserRouter>
-            <ToastProvider>
-                <Routes>
 
-                    {/* customers */}
-                    <Route path={PATH_URL.HOME} element={<AuthProvider><Layout/></AuthProvider>}>
-                    <Route element={<CartProvider><Outlet/></CartProvider>}>
-                        <Route path={PATH_URL.HOME} element={<Home />} />
-                        <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
-                        <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
-                        <Route path={PATH_URL.CART} element={<Cart />} />
-                       
-                        <Route element={<RequireAuth/>}>
-                            <Route path={PATH_URL.ACCOUNT.BASE} element={<Account />}>
-                                <Route path={PATH_URL.ACCOUNT.PROFILE} element={<Profile />} />
-                                <Route path={PATH_URL.ACCOUNT.ADDRESS} element={<Addresses/>} />
-                                <Route path={PATH_URL.ACCOUNT.ORDERS} element={<Orders />} />
-                                <Route path={PATH_URL.ACCOUNT.FAVOURITES} element={<Favourite />} />
+    return (
+        <>
+            <BrowserRouter>
+                <ToastProvider>
+                    <Routes>
+
+                        {/* customers */}
+                        <Route path={PATH_URL.HOME} element={<AuthProvider><Layout /></AuthProvider>}>
+                            <Route element={<CartProvider><Outlet /></CartProvider>}>
+                                <Route path={PATH_URL.HOME} element={<Home />} />
+                                <Route path={PATH_URL.CATEGORIES} element={<Categories />} />
+                                <Route path={PATH_URL.SIGN_IN} element={<SignIn />} />
+                                <Route path={PATH_URL.CART} element={<Cart />} />
+
+                                <Route element={<RequireAuth />}>
+                                    <Route path={PATH_URL.ACCOUNT} element={<Account />}>
+                                        <Route path={PATH_URL.ACCOUNT.PROFILE} element={<Profile />} />
+                                        <Route path={PATH_URL.ACCOUNT.ADDRESS} element={<Addresses />} />
+                                        <Route path={PATH_URL.ACCOUNT.ORDERS} element={<Orders />} />
+                                        <Route path={PATH_URL.ACCOUNT.FAVOURITES} element={<Favourite />} />
+                                    </Route>
+                                </Route>
+                                <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails />} />
+                                <Route path={PATH_URL.CHECK_OUT} element={<CheckOut />} />
+                                <Route path="/orders/:orderNumber" element={<OrderSummary />} />
+
                             </Route>
-                            <Route path={PATH_URL.ADD_ADDRESS} element={<AddAddress/>}/>
                         </Route>
-                        <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails/>}/>
-                        <Route path={PATH_URL.CHECK_OUT} element={<CheckOut/>}/>
-                        <Route path="/orders/:orderNumber" element={<OrderSummary/>}/>
-                        
-                    </Route>
-                    </Route>
-                    {/* <Route path={PATH_URL.ORDER_SUMMARY} element={<OrderSummary/>}/> */}
-                    <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword/>}/>
-                    <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
-                    <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />
-                    <Route path='*' element ={<NotFound/>}/>
-                
-                    {/* SELLER ROUTES */}
-                    <Route element={<ShopAuthProvider><Outlet/></ShopAuthProvider>}>
-                        <Route path={PATH_URL.SELL.LOG_IN} element={<Login/>}/>
-                        <Route element={<ShopRequireAuth/>}>
-                            <Route path={PATH_URL.SELL.DASHBOARD} element={<SellDashBoard />}>
-                                <Route path={PATH_URL.SELL.PROFILE} element={<ShopProfile/>}/>
-                                <Route path={PATH_URL.SELL.ADD_PRODUCTS} element={<AddProduct/>}/>
-                                <Route path={PATH_URL.SELL.MY_PRODUCTS} element={<MyProducts/>}/>
-                                <Route path={PATH_URL.SELL.EDIT_PRODUCT} element={<EditProduct/>}/>
-                                <Route path={PATH_URL.SELL.ADD_CATEGORY} element={<AddCategory/>}/>
+                        <Route path={PATH_URL.EMAIL} element={<Email />} />
+                        <Route path={PATH_URL.RESETPASSWORD} element={<ResetPassword />} />
+                        <Route path={PATH_URL.FORGOT_PASSWORD} element={<ForgotPassword />} />
+                        <Route path={PATH_URL.SIGN_UP} element={<SignUp />} />
+                        <Route path='*' element={<NotFound />} />
+
+                        {/* SELLER ROUTES */}
+                        <Route element={<ShopAuthProvider><Outlet /></ShopAuthProvider>}>
+                            <Route path={PATH_URL.SELL.LOG_IN} element={<Login />} />
+                            <Route element={<ShopRequireAuth />}>
+                                <Route path={PATH_URL.SELL.DASHBOARD} element={<SellDashBoard />}>
+                                    <Route path={PATH_URL.SELL.PROFILE} element={<ShopProfile />} />
+                                    <Route path={PATH_URL.SELL.ADD_PRODUCTS} element={<AddProduct />} />
+                                    <Route path={PATH_URL.SELL.MY_PRODUCTS} element={<MyProducts />} />
+                                    <Route path={PATH_URL.SELL.EDIT_PRODUCT} element={<EditProduct />} />
+                                    <Route path={PATH_URL.SELL.ADD_CATEGORY} element={<AddCategory />} />
+                                </Route>
                             </Route>
-                        </Route>    
-                    </Route>
-                    <Route path={PATH_URL.SELL.CREATE_BUSINESS_ACCOUNT} element={<CreateAccount />} />
-                    <Route path={PATH_URL.SELL.FORGOT_PASSWORD} element={<ForgotPasswordShop/>} />
-                    <Route path={PATH_URL.SELL.RESET_SHOP_PASSWORD} element={<ResetShopPassword/>} />
-                </Routes>   
-            </ToastProvider>
-        </BrowserRouter>
-    </>
-  );
+                        </Route>
+                        <Route path={PATH_URL.SELL.CREATE_BUSINESS_ACCOUNT} element={<CreateAccount />} />
+                        <Route path={PATH_URL.SELL.FORGOT_PASSWORD} element={<ForgotPasswordShop />} />
+                        <Route path={PATH_URL.SELL.RESET_SHOP_PASSWORD} element={<ResetShopPassword />} />
+                    </Routes>
+                </ToastProvider>
+            </BrowserRouter>
+        </>
+    );
 }
 
-export default  App;
+export default App;

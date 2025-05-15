@@ -8,12 +8,12 @@ import { useToast } from '../context/ToastContext';
 const WishlistButton = ({productId}) => {
     const [isWishlisted,setIsWishlisted] =useState(null);
 
-    const {token} = useAuth();
+    const {isAuthenticated} = useAuth();
     const {showToast} = useToast();
     const navigate = useNavigate();
 
     useEffect(()=>{
-        if(token){
+        if(isAuthenticated){
             const checkStatus = async()=>{
                 const response = await axiosInstance.get(GET_ROUTES.ChECK_IS_IN_WISHLIST(productId));
                 if(response.data.success){
@@ -22,11 +22,11 @@ const WishlistButton = ({productId}) => {
             }
             checkStatus();
         }
-    },[token,productId]);
+    },[isAuthenticated,productId]);
 
     
     const handleWishlistClick =async()=>{
-        if(token){
+        if(isAuthenticated){
             try {
                 const response = await axiosInstance.post(POST_ROUTES.ADD_AND_REMOVE_WISHLIST(productId));
                 if(response.data.success){
