@@ -1,21 +1,24 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { PATH_URL } from '../../../constant';
-import { useShopAuth } from '../../../context/ShopAuthContext';
+import { useShopAuth } from '../../../hooks/useAppSelectors';
 
 const ShopRequireAuth = () => {
     const navigate = useNavigate();
-    const {shopToken} = useShopAuth();
+    const { shopIsAuthenticated } = useShopAuth();
 
-    useEffect(()=>{
-        if(!shopToken){
+    console.log("REQUIRED :::", shopIsAuthenticated);
+
+
+    useEffect(() => {
+        if (!shopIsAuthenticated) {
             navigate(PATH_URL.SELL.LOG_IN)
         }
-    },[shopToken,navigate]);
+    }, [shopIsAuthenticated, navigate]);
 
     return (
         <div>
-            <Outlet/>
+            <Outlet />
         </div>
     );
 }

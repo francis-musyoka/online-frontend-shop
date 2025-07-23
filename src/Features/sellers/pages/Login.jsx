@@ -1,18 +1,39 @@
-import React, { } from 'react';
+import { useEffect } from 'react';
 import SignInForm from '../../../components/SignInForm';
-import { useShopAuth } from '../../../context/ShopAuthContext';
+import { useShopAuth } from '../../../hooks/useAppSelectors';
+import { shopLogInAction } from '../../../redux/actionsCreators/shopAuthActions';
+import { useDispatch } from 'react-redux';
+import { useToast } from '../../../context/ToastContext';
+import { useNavigate } from 'react-router-dom';
+import { PATH_URL } from '../../../constant';
 
 
 const SignIn = () => {
-   const {logIn} = useShopAuth();
+    const { error, shopIsAuthenticated } = useShopAuth();
 
-    const handleSubmit =(formData)=>{
-        logIn(formData)  
+    const dispatch = useDispatch()
+    const { showToast } = useToast();
+    const navigate = useNavigate();
+
+    const handleSubmit = (formData) => {
+        dispatch(shopLogInAction(formData));
     }
+
+    useEffect(() => {
+        if (error) {
+            showToast(error, "error");
+        }
+    }, [error, showToast]);
+
+    useEffect(() => {
+        if (shopIsAuthenticated) {
+            navigate(PATH_URL.SELL.MY_PRODUCTS)
+        }
+    }, [navigate, shopIsAuthenticated]);
 
     return (
         <>
-            <SignInForm onSubmit={handleSubmit} isSeller={true}/>
+            <SignInForm onSubmit={handleSubmit} isSeller={true} />
         </>
     );
 }

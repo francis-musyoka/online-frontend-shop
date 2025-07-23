@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { validateAddressForm ,validate} from '../../../utils/validateForms';
+import { validateAddressForm, validate } from '../../../utils/validateForms';
 import Button from '../../../components/Button';
 import { axiosInstance, POST_ROUTES_SHOP } from '../../../constant';
-import { useShopAuth } from '../../../context/ShopAuthContext';
 import { useToast } from '../../../context/ToastContext';
+import { useShopAuth } from '../../../hooks/useAppSelectors';
+import { useDispatch } from 'react-redux';
+import { fetchShopProfile } from '../../../redux/actionsCreators/shopAuthActions';
 
 
 
 const ShopProfile = () => {
-    const [formData,setFormData] =useState({
+    const [formData, setFormData] = useState({
         email: "",
         phoneNumber: "+254",
-        shopName:"",
+        shopName: "",
         addressLine1: "",
         addressLine2: "",
         city: "",
@@ -19,16 +21,23 @@ const ShopProfile = () => {
         zipCode: "",
     });
 
-    const {shopProfile} = useShopAuth();
-    const {showToast} = useToast();
+    const { shopProfile, shopIsAuthenticated } = useShopAuth();
+    const { showToast } = useToast();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (shopIsAuthenticated) {
+            dispatch(fetchShopProfile());
+        }
+    }, [dispatch, shopIsAuthenticated]);;
 
     useEffect(() => {
         if (shopProfile) {
             setFormData((prev) => ({
-                ...prev, 
+                ...prev,
                 email: shopProfile.email || "",
                 phoneNumber: shopProfile.businessNumber || "+254",
-                shopName: shopProfile.businessName|| "",
+                shopName: shopProfile.businessName || "",
                 addressLine1: shopProfile.addressLine1 || "",
                 addressLine2: shopProfile.addressLine2 || "",
                 city: shopProfile.city || "",
@@ -38,34 +47,34 @@ const ShopProfile = () => {
         }
     }, [shopProfile]);;
 
-    const [formErrors,setFormErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({});
 
-    const handleChange = (e)=>{
-        const {value,name }= e.target;
-        setFormData({...formData,[name]: value})
+    const handleChange = (e) => {
+        const { value, name } = e.target;
+        setFormData({ ...formData, [name]: value })
     };
 
-    const validateForm = (formData)=>{
+    const validateForm = (formData) => {
         const result1 = validate(formData);
         const result2 = validateAddressForm(formData);
-        const errors = {...result1, ...result2};
+        const errors = { ...result1, ...result2 };
         setFormErrors(errors);
-        
+
         return Object.keys(errors).length < 1;
     }
 
 
-    const handleSubmit =async(e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const isValid = validateForm(formData);
-     
-        if(isValid){
-            const confirm = window.confirm("Do you what to make changes")   
+
+        if (isValid) {
+            const confirm = window.confirm("Do you what to make changes")
             try {
-                if(confirm){
-                    const response = await axiosInstance.post(POST_ROUTES_SHOP.UPDATE_SHOP_PROFILR(shopProfile.id), {formData});
-                    if(response.data.success){
+                if (confirm) {
+                    const response = await axiosInstance.post(POST_ROUTES_SHOP.UPDATE_SHOP_PROFILR(shopProfile.id), { formData });
+                    if (response.data.success) {
                         showToast('Shop profile updated successfully', 'success');
                     }
                 }
@@ -74,7 +83,7 @@ const ShopProfile = () => {
                 showToast(error.response.data.error)
             };
         }
-        
+
     }
 
     return (
@@ -86,13 +95,13 @@ const ShopProfile = () => {
                 </div>
 
                 <div className="grid md:grid-cols-2 md:gap-6  px-6">
-                  
+
                     <div className="relative z-0 w-full mb-5 group">
                         <label
                             htmlFor="email"
                             className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Account Email
+                            Account Email
                         </label>
                         <input
                             type="text"
@@ -110,7 +119,7 @@ const ShopProfile = () => {
                             htmlFor="phoneNumber"
                             className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Phone Number
+                            Phone Number
                         </label>
                         <input
                             type="tel"
@@ -129,7 +138,7 @@ const ShopProfile = () => {
                         htmlFor="shopName"
                         className="block text-lg font-medium text-gray-700 mb-2"
                     >
-                    Shop Name
+                        Shop Name
                     </label>
                     <input
                         type="shopName"
@@ -152,7 +161,7 @@ const ShopProfile = () => {
                             htmlFor="addressLine1"
                             className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Address Line 1
+                            Address Line 1
                         </label>
                         <input
                             type="text"
@@ -167,66 +176,66 @@ const ShopProfile = () => {
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
-                    <label
-                        htmlFor="addressLine2"
-                        className="block text-lg font-medium text-gray-700 mb-2"
+                        <label
+                            htmlFor="addressLine2"
+                            className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Address Line 2
+                            Address Line 2
                         </label>
                         <input
-                        type="text"
-                        name="addressLine2"
-                        id="addressLine2"
-                        value={formData.addressLine2}
-                        onChange={handleChange}
-                        className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                            type="text"
+                            name="addressLine2"
+                            id="addressLine2"
+                            value={formData.addressLine2}
+                            onChange={handleChange}
+                            className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         />
-                    
+
                     </div>
 
 
                     <div className="relative z-0 w-full mb-5 group">
                         <label
-                                htmlFor="city"
-                                className="block text-lg font-medium text-gray-700 mb-2"
-                            >
+                            htmlFor="city"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                        >
                             City
-                            </label>
-                            <input
-                                type="text"
-                                name="city"
-                                id="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                            />
-                            {formErrors.city && <span className="text-red-700 text-xs">{formErrors.city}</span>}
+                        </label>
+                        <input
+                            type="text"
+                            name="city"
+                            id="city"
+                            value={formData.city}
+                            onChange={handleChange}
+                            className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                        />
+                        {formErrors.city && <span className="text-red-700 text-xs">{formErrors.city}</span>}
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
                         <label
-                                htmlFor="state"
-                                className="block text-lg font-medium text-gray-700 mb-2"
-                            >
+                            htmlFor="state"
+                            className="block text-lg font-medium text-gray-700 mb-2"
+                        >
                             State
-                            </label>
-                            <input
-                                type="text"
-                                name="state"
-                                id="state"
-                                value={formData.state}
-                                onChange={handleChange}
-                                className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                            /> 
-                            {formErrors.state && <span className="text-red-700 text-xs">{formErrors.state}</span>}
+                        </label>
+                        <input
+                            type="text"
+                            name="state"
+                            id="state"
+                            value={formData.state}
+                            onChange={handleChange}
+                            className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                        />
+                        {formErrors.state && <span className="text-red-700 text-xs">{formErrors.state}</span>}
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
-                    <label
+                        <label
                             htmlFor="zipCode"
                             className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Zip Code
+                            Zip Code
                         </label>
                         <input
                             type="text"
@@ -236,7 +245,7 @@ const ShopProfile = () => {
                             onChange={handleChange}
                             className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         />
-                        {formErrors.zipCode && <span className="text-red-700 text-xs">{formErrors.zipCode}</span>} 
+                        {formErrors.zipCode && <span className="text-red-700 text-xs">{formErrors.zipCode}</span>}
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
@@ -244,7 +253,7 @@ const ShopProfile = () => {
                             htmlFor="country"
                             className="block text-lg font-medium text-gray-700 mb-2"
                         >
-                        Country
+                            Country
                         </label>
                         <input
                             type="text"
@@ -256,9 +265,9 @@ const ShopProfile = () => {
                             className="block w-full py-3 px-4 text-lg text-gray-900 bg-gray-100 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                         />
                     </div>
-                </div>  
+                </div>
                 <div className=" text-right px-6 mb-10">
-                    <Button label="Save"  variant="secondary" size="medium"/>
+                    <Button label="Save" variant="secondary" size="medium" />
                 </div>
             </form>
 

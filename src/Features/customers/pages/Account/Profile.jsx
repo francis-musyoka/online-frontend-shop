@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { validateUpdateForm } from '../../../../utils/validateForms';
 import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
 import ChangePassword from './ChangePassword';
-import { useAuth } from '../../../../context/AuthContext';
-
+import { useDispatch } from 'react-redux';
+import { useCustomerAuth } from '../../../../hooks/useAppSelectors';
+import { fetchUserProfile } from '../../../../redux/actionsCreators/customerAuthActions';
 
 
 const Profile = () => {
@@ -13,8 +14,17 @@ const Profile = () => {
     const [edit, setEdit] = useState(false);
     const [formErrors, setFormErrors] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { isAuthenticated, user } = useCustomerAuth();
+    const dispatch = useDispatch();
 
-    const { user } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(fetchUserProfile())
+        }
+    }, [dispatch, isAuthenticated]);
+
+
     useEffect(() => {
         if (user) {
             setFirstName(user?.firstName);

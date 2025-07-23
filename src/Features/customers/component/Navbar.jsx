@@ -7,13 +7,14 @@ import { HiMiniUserCircle } from 'react-icons/hi2';
 import { GrSearch } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
 import { PATH_URL } from '../../../constant';
-import { useAuth } from '../../../context/AuthContext';
+import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
 
 
 
 
 const Navbar = () => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useCustomerAuth();
+    const { totalQuantity } = useCart();
 
     return (
         <nav className="">
@@ -63,7 +64,7 @@ const Navbar = () => {
                         <NavLink
                             to={PATH_URL.HOME}
                             className={({ isActive }) =>
-                                `text-lg font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
+                                `text-sm font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
                             }
                         >
                             Home
@@ -72,7 +73,7 @@ const Navbar = () => {
                         <NavLink
                             to={PATH_URL.CATEGORIES}
                             className={({ isActive }) =>
-                                `text-lg font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
+                                `text-sm font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
                             }
                         >
                             Category
@@ -97,16 +98,16 @@ const Navbar = () => {
                             <NavLink
                                 to={PATH_URL.SIGN_IN}
                                 className={({ isActive }) =>
-                                    `text-lg font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
+                                    `text-sm font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
                                 }
                             >
-                                <FiLogIn size={24} className="inline-block" /> Sign In
+                                <FiLogIn size={20} className="inline-block" /> Sign In
                             </NavLink>
                         ) : (
                             <NavLink
                                 to={PATH_URL.ACCOUNT.BASE}
                                 className={({ isActive }) =>
-                                    `text-lg font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
+                                    `text-sm font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
                                 }
                             >
                                 <HiMiniUserCircle size={24} className="inline-block" /> Account
@@ -117,10 +118,19 @@ const Navbar = () => {
                         <NavLink
                             to={PATH_URL.CART}
                             className={({ isActive }) =>
-                                `text-lg font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`
+                                `relative inline-flex items-center text-sm font-mono ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'
+                                }`
                             }
                         >
-                            <BsCartCheck size={24} className="inline-block" /> Cart
+                            <div className="relative">
+                                <BsCartCheck size={20} />
+                                {totalQuantity > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                                        {totalQuantity}
+                                    </span>
+                                )}
+                            </div>
+                            <span className="ml-2">Cart</span>
                         </NavLink>
                     </div>
                 </div>

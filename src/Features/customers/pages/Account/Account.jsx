@@ -8,14 +8,14 @@ import { FiLogOut } from 'react-icons/fi';
 import { AiOutlineDown } from 'react-icons/ai';
 import { FcAddressBook } from "react-icons/fc";
 import { useHooks } from '../../../../hooks/useHooks';
-import { useAuth } from '../../../../context/AuthContext';
+import { logOutAction } from '../../../../redux/actionsCreators/customerAuthActions';
+import { useDispatch } from 'react-redux';
 
 
 const Account = () => {
     const [selectedOption, setSelectedOption] = useState("My Profile");
     const { status: isDropdownOpen, handleStatus: toggleDropdown } = useHooks();
-    const { logOutAction } = useAuth();
-
+    const dispatch = useDispatch();
     // Function to handle option selection
     const handleOptionClick = (option) => {
         setSelectedOption(option); // Update the selected option
@@ -23,7 +23,7 @@ const Account = () => {
     };
 
     const handleLogOut = () => {
-        logOutAction()
+        dispatch(logOutAction());
     }
 
     return (

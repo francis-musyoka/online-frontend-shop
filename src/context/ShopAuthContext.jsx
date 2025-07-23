@@ -16,12 +16,27 @@ const ShopAuthProvider = ({ children }) => {
     const { showToast } = useToast();
     const navigate = useNavigate();
 
+
+    axiosInstance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('headerToken');
+            if (token) {
+                config.headers["Authorization"] = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => {
+            return Promise.reject(error)
+        }
+    );
+
     const logIn = async (formData) => {
         try {
             const response = await axiosInstance.post(POST_ROUTES_SHOP.LOG_IN, { formData });
             if (response.data.success) {
                 setShopToken(true);
                 localStorage.setItem('shopToken', JSON.stringify(true));
+                localStorage.setItem('headerToken', JSON.stringify(response.data.token));
                 showToast("Log in successfully", "success");
                 navigate(PATH_URL.SELL.MY_PRODUCTS);
             }

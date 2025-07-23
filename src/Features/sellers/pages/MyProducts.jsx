@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
-import { useShopAuth } from '../../../context/ShopAuthContext';
+import { useShopAuth } from '../../../hooks/useAppSelectors';
 
 
 const MyProducts = () => {
 
     const [product, setProduct] = useState([]);
     const { showToast } = useToast();
-    const { shopToken } = useShopAuth();
+    const { shopIsAuthenticated } = useShopAuth();
 
     useEffect(() => {
         const getProducts = async () => {
@@ -18,11 +18,11 @@ const MyProducts = () => {
                 setProduct(data.shopProducts)
             }
         };
-        if (shopToken) {
+        if (shopIsAuthenticated) {
             getProducts();
         }
 
-    }, [setProduct, shopToken]);
+    }, [setProduct, shopIsAuthenticated]);
 
 
 

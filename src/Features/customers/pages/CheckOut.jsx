@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { axiosInstance, BASEURL, GET_ROUTES, POST_ROUTES } from '../../../constant';
 import SelectAddress from '../component/SelectAddress';
-import { useCartContext } from '../../../context/CartContext';
 import { useToast } from '../../../context/ToastContext';
 import { pollTransactionStatus, CheckStatusAgain } from '../../../utils/checkTransactionStatus';
 import Spinning from '../../../components/Spinning';
 import { useNavigate } from 'react-router-dom';
 import MpesaForm from "./MpesaForm"
+import { useCart } from '../../../hooks/useAppSelectors';
 
 const CheckOut = () => {
 
@@ -29,7 +29,7 @@ const CheckOut = () => {
     const [lastTransactionId, setLastTransactionId] = useState(localStorage.getItem('lastTransactionId') || null);
     const [orderNumber, setOrderNumber] = useState(localStorage.getItem('orderNumber') || null);
 
-    const { cartItem, totalAmount, } = useCartContext();
+    const { cartItem, totalAmount, } = useCart();
     const { showToast } = useToast();
     const navigate = useNavigate();
     useEffect(() => {

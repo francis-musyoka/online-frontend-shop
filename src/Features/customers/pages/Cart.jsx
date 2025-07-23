@@ -3,20 +3,25 @@ import { HiXMark } from "react-icons/hi2";
 import { Link, useNavigate, } from 'react-router-dom';
 import { axiosInstance, BASEURL, GET_ROUTES, PATH_URL, } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
-import { useAuth } from '../../../context/AuthContext';
-import { useCartContext } from '../../../context/CartContext';
 import CartUpdateButton from '../../../components/CartUpdateButton';
 import Button from '../../../components/Button';
+import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
+import { addTocart, removeCartItem } from '../../../redux/actionsCreators/cartAction';
+import { useDispatch } from 'react-redux';
 
 
 const Cart = () => {
     const [favourite, setFavourite] = useState([]);
+    const dispatch = useDispatch();
 
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated } = useCustomerAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
+    const guestId = localStorage.getItem("guestId");
 
-    const { removeItem, cartItem, totalQuantity, totalAmount, addToCart } = useCartContext();
+    const { cartItem, totalQuantity, totalAmount } = useCart();
+
+
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -48,7 +53,11 @@ const Cart = () => {
         } else {
             navigate(PATH_URL.SIGN_IN);
         }
-    }
+    };
+
+    const deleteFromCart = (productId) => {
+        dispatch(removeCartItem(isAuthenticated, guestId, productId))
+    };
 
     return (
         <>
@@ -72,7 +81,7 @@ const Cart = () => {
                                         <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
                                             <p className="text-base  text-center ">KSH {product.product.price.toLocaleString()}</p>
                                             <div className="flex items-center py-3 space-x-6">
-                                                <button onClick={() => removeItem(product.productId)} className="text-neutral hover:text-secondary">
+                                                <button onClick={() => deleteFromCart(product.productId)} className="text-neutral hover:text-secondary">
                                                     <HiXMark size={24} />
                                                 </button>
                                                 <CartUpdateButton productId={product.productId} quantity={product.quantity} productQuantity={product.product.quantity} />
@@ -159,7 +168,7 @@ const Cart = () => {
                                                 KSH {product.product.price.toLocaleString()}
                                             </span>
 
-                                            <Button label="Add to Cart" variant="secondary" size="small" onClick={() => addToCart(product.productId)} />
+                                            <Button label="Add to Cart" variant="secondary" size="small" onClick={() => dispatch(addTocart(product.productId))} />
                                         </div>
                                     </div>
                                 </div>

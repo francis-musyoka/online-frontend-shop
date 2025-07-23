@@ -13,9 +13,25 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const { showToast } = useToast();
     const navigate = useNavigate();
-    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('token') || false);
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('auth') || false);
 
     const guestId = localStorage.getItem('guestId') || null;
+
+
+    axiosInstance.interceptors.request.use(
+        (config) => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+            return config
+        },
+        (error) => {
+            return Promise.reject(error)
+        }
+    )
+
+
 
 
     const logInAction = async (email, password) => {
@@ -23,8 +39,9 @@ const AuthProvider = ({ children }) => {
             const response = await axiosInstance.post(`${POST_ROUTES.SIGN_IN}`, { email, password, guestId })
             if (response.data.success) {
                 localStorage.clear();
-                setIsAuthenticated(true)
-                localStorage.setItem('token', JSON.stringify(true));
+                setIsAuthenticated(true);
+                localStorage.setItem('auth', JSON.stringify(true));
+                localStorage.setItem('token', JSON.stringify(response.data.token));
                 navigate(PATH_URL.ACCOUNT.BASE);
             };
 

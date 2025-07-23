@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../../components/Button';
 import { axiosInstance, BASEURL, GET_ROUTES } from '../../../constant';
-import { useCartContext } from '../../../context/CartContext';
 import CartUpdateButton from '../../../components/CartUpdateButton';
 import Spinning from '../../../components/Spinning';
+import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
+import { addTocart, fetchCart } from '../../../redux/actionsCreators/cartAction';
+import { useDispatch } from 'react-redux';
 
-
+let fetched = false;
 
 const Home = () => {
 
     const [product, setProduct] = useState('');
     const [isLoading, setIsLoading] = useState(true)
+    const dispatch = useDispatch();
+    const { cartItem } = useCart();
+    const { isAuthenticated } = useCustomerAuth();
+    const guestId = localStorage.getItem("guestId");
 
-    const { addToCart, cartItem } = useCartContext();
+    useEffect(() => {
+        if (!fetched) {
+            dispatch(fetchCart(isAuthenticated, guestId));
+            fetched = true
+        }
+    }, [dispatch, guestId, isAuthenticated]);
 
     useEffect(() => {
 
@@ -38,7 +49,7 @@ const Home = () => {
 
 
     const handleClick = async (productId) => {
-        await addToCart(productId);
+        dispatch(addTocart(isAuthenticated, productId));
     };
 
     return (
@@ -46,28 +57,28 @@ const Home = () => {
             {isLoading ? (<Spinning />) : (
                 <>
                     {product && product.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-5 gap-2 p-2">
                             {product.map((product) => {
                                 const cartProduct = cartItem.find(item => item.productId === product.id);
                                 return (
                                     <div key={product.id} className="bg-white border rounded-lg shadow-lg overflow-hidden">
 
-                                        <Link to={`/${product.productName}`} state={{ productId: product.id }} className="bg-white p-4 flex items-center justify-center">
+                                        <Link to={`/${product.productName}`} state={{ productId: product.id }} className="bg-white flex items-center justify-center">
                                             <img
-                                                className="w-full h-auto object-contain"
+                                                className="w-50 h-40"
                                                 src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null}
                                                 alt={product.productName || 'Product Image'}
                                             />
                                         </Link>
-                                        <div className="px-5 pb-5">
+                                        <div className="px-4 pb-2">
                                             <Link to={`/${product.productName}`} state={{ productId: product.id }}>
-                                                <h5 className="text-xl font-medium tracking-tight dark:text-neutral mb-2 truncate" title={product.productName}>
+                                                <h5 className="text-sm font-medium tracking-tight dark:text-neutral truncate" title={product.productName}>
                                                     {product.productName}
                                                 </h5>
                                             </Link>
 
-                                            <div className="flex items-center justify-between mt-4">
-                                                <span className="text-base font-light text-neutral">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs font-light text-neutral">
                                                     KSH {product.price.toLocaleString()}
                                                 </span>
 
