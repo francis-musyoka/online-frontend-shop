@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { developementApi, productionApi } from './utils/config';
 
 const PATH_URL = {
