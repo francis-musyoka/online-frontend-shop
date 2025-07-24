@@ -7,9 +7,6 @@ const ShopRequireAuth = () => {
     const navigate = useNavigate();
     const { shopIsAuthenticated } = useShopAuth();
 
-    console.log("REQUIRED :::", shopIsAuthenticated);
-
-
     useEffect(() => {
         if (!shopIsAuthenticated) {
             navigate(PATH_URL.SELL.LOG_IN)

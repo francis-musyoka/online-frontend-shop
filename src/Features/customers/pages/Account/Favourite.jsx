@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { axiosInstance, BASEURL, GET_ROUTES } from '../../../../constant';
+import { useEffect, useState } from 'react';
+import { BASEURL, GET_ROUTES } from '../../../../constant';
 import WishlistButton from '../../../../components/WishlistButton';
 import { useToast } from '../../../../context/ToastContext';
+import axiosCustomer from '../../../../utils/axiosCustomer';
 
 const Favourite = () => {
     const [products, setProducts] = useState([]);
@@ -11,7 +12,7 @@ const Favourite = () => {
     useEffect(() => {
         try {
             const getProducts = async () => {
-                const response = await axiosInstance.get(GET_ROUTES.GET_PRODUCTS_IN_WISHLIST);
+                const response = await axiosCustomer.get(GET_ROUTES.GET_PRODUCTS_IN_WISHLIST);
                 if (response.data.success) {
                     setProducts(response.data.myWishlist);
                 }

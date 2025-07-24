@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { validateUpdateForm } from '../../../../utils/validateForms';
-import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
+import {  PATCH_ROUTES } from '../../../../constant';
 import ChangePassword from './ChangePassword';
 import { useDispatch } from 'react-redux';
 import { useCustomerAuth } from '../../../../hooks/useAppSelectors';
 import { fetchUserProfile } from '../../../../redux/actionsCreators/customerAuthActions';
+import axiosCustomer from '../../../../utils/axiosCustomer';
 
 
 const Profile = () => {
@@ -45,7 +46,7 @@ const Profile = () => {
         const isValid = validateForm();
         if (isValid) {
             try {
-                const response = await axiosInstance.patch(`${PATCH_ROUTES.UPDATE_USER_PROFILE(user.id)}`, {
+                const response = await axiosCustomer.patch(`${PATCH_ROUTES.UPDATE_USER_PROFILE(user.id)}`, {
                     firstName, lastName, email
                 })
                 if (response.data.success === true) {

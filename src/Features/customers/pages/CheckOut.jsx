@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { axiosInstance, BASEURL, GET_ROUTES, POST_ROUTES } from '../../../constant';
+import { useEffect, useState } from 'react';
+import { BASEURL, GET_ROUTES, POST_ROUTES } from '../../../constant';
 import SelectAddress from '../component/SelectAddress';
 import { useToast } from '../../../context/ToastContext';
 import { pollTransactionStatus, CheckStatusAgain } from '../../../utils/checkTransactionStatus';
@@ -7,6 +7,7 @@ import Spinning from '../../../components/Spinning';
 import { useNavigate } from 'react-router-dom';
 import MpesaForm from "./MpesaForm"
 import { useCart } from '../../../hooks/useAppSelectors';
+import axiosCustomer from '../../../utils/axiosCustomer';
 
 const CheckOut = () => {
 
@@ -34,7 +35,7 @@ const CheckOut = () => {
     const navigate = useNavigate();
     useEffect(() => {
         const fetchAddresses = async () => {
-            const { data } = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
+            const { data } = await axiosCustomer.get(GET_ROUTES.GET_ADDRESSES);
             if (data.success) {
                 setAllAddresses(data.addresses);
             };
@@ -46,7 +47,7 @@ const CheckOut = () => {
         if (!paymentDetails) {
             const fetchPaymentDetails = async () => {
                 try {
-                    const { data } = await axiosInstance.get(GET_ROUTES.GET_MPESA_PAYMENT);
+                    const { data } = await axiosCustomer.get(GET_ROUTES.GET_MPESA_PAYMENT);
                     if (data.success) {
                         setPaymentDetails(data.payment);
                         sessionStorage.setItem('payment', JSON.stringify(data.payment))
@@ -129,7 +130,7 @@ const CheckOut = () => {
                     localStorage.setItem('orderNumber', orderResponse.data.orderId);
 
                     // Initiate M-pesa Transaction
-                    const transactionResponse = await axiosInstance.post(POST_ROUTES.MPESA_TRANSCATION, { total, phoneNumber, orderNumber });
+                    const transactionResponse = await axiosCustomer.post(POST_ROUTES.MPESA_TRANSCATION, { total, phoneNumber, orderNumber });
 
                     if (transactionResponse.data.success) {
                         const transactionId = transactionResponse.data.data.CheckoutRequestID;

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance, GET_ROUTES, PATH_URL, POST_ROUTES } from '../../../../constant';
+import { GET_ROUTES, PATH_URL, POST_ROUTES } from '../../../../constant';
 import { useToast } from '../../../../context/ToastContext';
+import axiosCustomer from '../../../../utils/axiosCustomer';
 
 const Addresses = () => {
 
@@ -10,7 +11,7 @@ const Addresses = () => {
 
     useEffect(() => {
         const fetchAddresses = async () => {
-            const { data } = await axiosInstance.get(GET_ROUTES.GET_ADDRESSES);
+            const { data } = await axiosCustomer.get(GET_ROUTES.GET_ADDRESSES);
             if (data.success) {
                 setAddresses(data.addresses);
             };
@@ -18,14 +19,10 @@ const Addresses = () => {
         fetchAddresses();
     }, []);
 
-    useEffect(() => {
-        console.log('NO DEPENDANCESS  ADDRESS ...................');
-
-    }, []);
 
     const handleRemove = async (addressId) => {
         try {
-            await axiosInstance.post(POST_ROUTES.DELETE_ADDRESS(addressId));
+            await axiosCustomer.post(POST_ROUTES.DELETE_ADDRESS(addressId));
             setAddresses((prevAddress) =>
                 prevAddress.filter((address) => address.id !== addressId)
             );
@@ -37,7 +34,7 @@ const Addresses = () => {
 
     const handleSetDefaultAddress = async (addressId) => {
         try {
-            const { data } = await axiosInstance.post(POST_ROUTES.SET_DEFAULT_ADDRESS(addressId));
+            const { data } = await axiosCustomer.post(POST_ROUTES.SET_DEFAULT_ADDRESS(addressId));
             if (data.success) {
 
                 showToast(data?.message, "success");
@@ -66,7 +63,7 @@ const Addresses = () => {
 
                 {addresses && addresses.length > 0 ? (
                     addresses.map(address => (
-                        <div key={address.id} className="flex flex-col border-2 border-gray-400 border-dashed rounded-md px-6">
+                        <div key={address.id} className="flex flex-col border-2 border-gray-400 border-dashed rounded-md px-3">
                             <div className='mt-5'>
                                 <p>{address.firstName} {address.lastName}</p>
                                 <p>{address.address}</p>
@@ -76,15 +73,15 @@ const Addresses = () => {
                                 <p>Kenya</p>
                                 <p>Phone Number: {address.phoneNumber}</p>
                             </div>
-                            <div className='flex justify-between mt-6 mb-4 '>
-                                <Link to={PATH_URL.ADD_ADDRESS} state={{ address: address, edit: true }} className='text-blue-400 hover:underline'>Edit</Link>
+                            <div className='flex justify-between text-center mt-6 mb-4 '>
+                                <Link to={PATH_URL.ADD_ADDRESS} state={{ address: address, edit: true }} className='text-blue-400 text-xs hover:underline'>Edit</Link>
                                 <p>|</p>
-                                <button onClick={() => handleRemove(address.id)} className='text-blue-400 hover:underline'>Remove</button>
+                                <button onClick={() => handleRemove(address.id)} className='text-blue-400 text-xs hover:underline'>Remove</button>
                                 <p>|</p>
                                 <button
                                     onClick={() => handleSetDefaultAddress(address.id)}
                                     disabled={address.isDefault}
-                                    className={`text-blue-400 hover:underline disabled:cursor-not-allowed disabled:text-secondary disabled:hover:no-underline`}
+                                    className={`text-blue-400 text-xs hover:underline disabled:cursor-not-allowed disabled:text-secondary disabled:hover:no-underline`}
                                 >
                                     {address.isDefault ? "Default Address" : "Set as Default"}
                                 </button>

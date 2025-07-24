@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { axiosInstance, BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
+import { BASEURL, GET_ROUTES_SHOP, PATH_URL, POST_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 import { useShopAuth } from '../../../hooks/useAppSelectors';
+import axiosShop from '../../../utils/axiosShop';
 
 
 const MyProducts = () => {
@@ -13,7 +14,7 @@ const MyProducts = () => {
 
     useEffect(() => {
         const getProducts = async () => {
-            const { data } = await axiosInstance.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
+            const { data } = await axiosShop.get(GET_ROUTES_SHOP.GET_SHOP_PRODUCT);
             if (data.success) {
                 setProduct(data.shopProducts)
             }
@@ -28,7 +29,7 @@ const MyProducts = () => {
 
     const handleDelete = async (productId) => {
         try {
-            const response = await axiosInstance.post(POST_ROUTES_SHOP.DELETE_PRODUCT(productId));
+            const response = await axiosShop.post(POST_ROUTES_SHOP.DELETE_PRODUCT(productId));
             if (response.status === 204) {
                 showToast('Product delete successfully', 'success')
             }

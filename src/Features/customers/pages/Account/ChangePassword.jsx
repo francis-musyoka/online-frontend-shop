@@ -1,37 +1,38 @@
-import React,{useState}from 'react';
+import { useState } from 'react';
 import { useHooks } from '../../../../hooks/useHooks';
 import { validateChangePassword } from '../../../../utils/validateForms';
-import { axiosInstance, PATCH_ROUTES } from '../../../../constant';
+import { PATCH_ROUTES } from '../../../../constant';
 import { useToast } from '../../../../context/ToastContext';
+import axiosCustomer from '../../../../utils/axiosCustomer';
 
 
-const ChangePassword = ({closeModal, user}) => {
+const ChangePassword = ({ closeModal, user }) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const {status:showPassword, handleStatus:handleClick} = useHooks();
+    const { status: showPassword, handleStatus: handleClick } = useHooks();
     const [formErrors, setFormErros] = useState({});
 
-    const {showToast} = useToast();
-    const validateForm = ()=>{
-        const errors = validateChangePassword(password,confirmPassword,currentPassword);
+    const { showToast } = useToast();
+    const validateForm = () => {
+        const errors = validateChangePassword(password, confirmPassword, currentPassword);
         setFormErros(errors)
-        return Object.keys(errors).length < 1 
+        return Object.keys(errors).length < 1
     }
-    const handleOnClick = async()=>{
+    const handleOnClick = async () => {
         const isValid = validateForm();
-        if(isValid){
+        if (isValid) {
             try {
-                const response = await axiosInstance.patch(`${PATCH_ROUTES.UPDATE_USER_PASSWORD(user.id)}`,{
-                    currentPassword,password,confirmPassword
+                const response = await axiosCustomer.patch(`${PATCH_ROUTES.UPDATE_USER_PASSWORD(user.id)}`, {
+                    currentPassword, password, confirmPassword
                 })
                 console.log(response.data);
-                
-                if(response.data.success){
+
+                if (response.data.success) {
                     showToast('Password Changed Successfully', 'success');
                     closeModal();
                 }
-                 
+
             } catch (error) {
                 showToast(error.response.data.error, 'error')
             }
@@ -42,9 +43,9 @@ const ChangePassword = ({closeModal, user}) => {
             <div className="bg-white rounded-lg shadow-lg w-80 p-6">
                 <h4 className="text-lg font-medium mb-4">Change Password</h4>
                 <p className="block text-base font-normal text-gray-700 mb-6">
-                        Your new password must be different from previous password.
-                </p> 
-                <hr className='my-3 '/>
+                    Your new password must be different from previous password.
+                </p>
+                <hr className='my-3 ' />
                 <div className="mb-3">
                     <label className="block text-sm font-medium text-gray-700">
                         Current Password
@@ -82,7 +83,7 @@ const ChangePassword = ({closeModal, user}) => {
                     {formErrors.confirmPassword && <span className="text-red-700 text-xs">{formErrors.confirmPassword}</span>}
                 </div>
                 <div className="flex justify-start mb-4">
-                    <input 
+                    <input
                         type="checkbox"
                         class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                         onClick={handleClick}
@@ -106,7 +107,7 @@ const ChangePassword = ({closeModal, user}) => {
                 </div>
             </div>
         </div>
-        
+
     );
 }
 

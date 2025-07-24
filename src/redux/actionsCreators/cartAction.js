@@ -1,6 +1,7 @@
-import { axiosInstance, GET_ROUTES, POST_ROUTES, PATCH_ROUTES } from "../../constant";
+import { GET_ROUTES, POST_ROUTES, PATCH_ROUTES } from "../../constant";
 import { replaceCart, cartError, updateQuantity, removeItem } from "../slices/cartSlice";
 import { createGuestId } from "../../utils";
+import axiosCustomer from "../../utils/axiosCustomer";
 
 export const fetchCart = (isAuthenticated, guestId) => {
 
@@ -8,10 +9,10 @@ export const fetchCart = (isAuthenticated, guestId) => {
         try {
             let response;
             if (isAuthenticated) {
-                response = await axiosInstance.get(GET_ROUTES.GET_CART);
+                response = await axiosCustomer.get(GET_ROUTES.GET_CART);
             } else if (guestId) {
                 // Fetch guest cart
-                response = await axiosInstance.get(GET_ROUTES.GET_GUEST_CART(guestId));
+                response = await axiosCustomer.get(GET_ROUTES.GET_GUEST_CART(guestId));
             };
             if (response?.data?.success) {
                 const items = response.data.cartItems;
@@ -38,10 +39,10 @@ export const addTocart = (isAuthenticated, productId) => {
             const guestId = createGuestId();
             let response;
             if (isAuthenticated) {
-                response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_CART(productId));
+                response = await axiosCustomer.post(POST_ROUTES.ADD_PRODUCT_TO_CART(productId));
 
             } else {
-                response = await axiosInstance.post(POST_ROUTES.ADD_PRODUCT_TO_GUEST_CART, { productId: productId, guestId });
+                response = await axiosCustomer.post(POST_ROUTES.ADD_PRODUCT_TO_GUEST_CART, { productId: productId, guestId });
             }
             if (response.data.success) {
                 dispatch(fetchCart(isAuthenticated, guestId));
@@ -63,9 +64,9 @@ export const updateCartQuantity = (isAuthenticated, guestId, productId, newQuant
                 return;
             }
             if (isAuthenticated) {
-                await axiosInstance.patch(PATCH_ROUTES.UPDATE_CART_QUANTITY(productId), { newQuantity });
+                await axiosCustomer.patch(PATCH_ROUTES.UPDATE_CART_QUANTITY(productId), { newQuantity });
             } else if (guestId) {
-                await axiosInstance.patch(PATCH_ROUTES.UPDATE_GUEST_CART_QUANTITY(productId), { newQuantity, guestId });
+                await axiosCustomer.patch(PATCH_ROUTES.UPDATE_GUEST_CART_QUANTITY(productId), { newQuantity, guestId });
             }
 
             dispatch(updateQuantity({ productId, newQuantity }));
@@ -81,9 +82,9 @@ export const removeCartItem = (isAuthenticated, guestId, productId) => {
     return async (dispatch) => {
         try {
             if (isAuthenticated) {
-                await axiosInstance.post(POST_ROUTES.DELETE_PRODUCT_FROM_CART(productId));
+                await axiosCustomer.post(POST_ROUTES.DELETE_PRODUCT_FROM_CART(productId));
             } else {
-                await axiosInstance.post(POST_ROUTES.DELETE_PRODUCT_FROM_GUEST_CART(productId), {
+                await axiosCustomer.post(POST_ROUTES.DELETE_PRODUCT_FROM_GUEST_CART(productId), {
                     guestId,
                 });
             }

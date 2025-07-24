@@ -19,9 +19,6 @@ const SignIn = () => {
         dispatch(logInAction(email, password));
     }
 
-    console.log(isAuthenticated);
-
-
     useEffect(() => {
         if (error) {
             showToast(error, 'error');

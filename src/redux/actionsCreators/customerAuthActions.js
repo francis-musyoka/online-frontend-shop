@@ -1,10 +1,11 @@
 import { loginSuccess, logoutSuccess, userProfile, authError } from "../slices/customerAuthSlice";
-import { axiosInstance, GET_ROUTES, POST_ROUTES } from '../../constant';
+import { GET_ROUTES, POST_ROUTES } from '../../constant';
+import axiosCustomer from "../../utils/axiosCustomer";
 
 export const logInAction = (email, password) => {
     return async (dispatch) => {
         try {
-            const response = await axiosInstance.post(`${POST_ROUTES.SIGN_IN}`, {
+            const response = await axiosCustomer.post(`${POST_ROUTES.SIGN_IN}`, {
                 email,
                 password,
                 guestId: localStorage.getItem('guestId') || null,
@@ -27,7 +28,7 @@ export const logInAction = (email, password) => {
 export const logOutAction = () => {
     return async (dispatch) => {
         try {
-            const response = await axiosInstance.get(`${GET_ROUTES.LOGOUT}`);
+            const response = await axiosCustomer.get(`${GET_ROUTES.LOGOUT}`);
             if (response.data.success) {
                 localStorage.removeItem("auth");
                 localStorage.removeItem("token");
@@ -44,7 +45,7 @@ export const logOutAction = () => {
 export const fetchUserProfile = () => {
     return async (dispatch) => {
         try {
-            const response = await axiosInstance.get(`${GET_ROUTES.GET_USER_PROFILE}`);
+            const response = await axiosCustomer.get(`${GET_ROUTES.GET_USER_PROFILE}`);
 
             if (response.data.authenticated) {
                 dispatch(userProfile({

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, } from 'react-router-dom';
+import { Link, useParams, } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { axiosInstance, BASEURL, GET_ROUTES } from '../../../constant';
+import { BASEURL, GET_ROUTES } from '../../../constant';
 import WishlistButton from '../../../components/WishlistButton';
 import DisplayDescription from '../component/DescriptionEditor';
 import KeyFeaturesDisplay from '../component/KeyFeatursEditor';
@@ -9,23 +9,26 @@ import CartUpdateButton from '../../../components/CartUpdateButton';
 import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
 import { addTocart } from '../../../redux/actionsCreators/cartAction';
 import { useDispatch } from 'react-redux';
+import axiosCustomer from '../../../utils/axiosCustomer';
 
 
 const ProductDetails = () => {
-
-
-    const location = useLocation();
-    const { productId } = location.state;
+    const { productId } = useParams();
     const [product, setProduct] = useState()
     const [selectedImage, setSelectedImage] = useState(null);
+
 
     const { cartItem } = useCart();
     const { isAuthenticated } = useCustomerAuth();
     const dispatch = useDispatch();
 
+    console.log("PRUDUCT ID ::", productId);
+
+
     useEffect(() => {
+
         const getProductDetails = async () => {
-            const response = await axiosInstance.get(GET_ROUTES.GET_SINGLE_PRODUCT(productId));
+            const response = await axiosCustomer.get(GET_ROUTES.GET_SINGLE_PRODUCT(productId));
             if (response.data.success) {
                 setProduct(response.data.productDetail);
                 setSelectedImage(response.data.productDetail.image[0])
@@ -35,8 +38,6 @@ const ProductDetails = () => {
         getProductDetails();
 
     }, [productId, setProduct]);
-
-    console.log('cart::=>', cartItem);
 
 
     const cartProduct = cartItem?.find(item => item.productId === productId);

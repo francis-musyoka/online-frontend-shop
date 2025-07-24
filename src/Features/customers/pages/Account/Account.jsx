@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { RiUserLine } from 'react-icons/ri';
 import { HiOutlineShoppingBag } from 'react-icons/hi';

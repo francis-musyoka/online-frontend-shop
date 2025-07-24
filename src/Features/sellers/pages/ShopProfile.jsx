@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { validateAddressForm, validate } from '../../../utils/validateForms';
 import Button from '../../../components/Button';
-import { axiosInstance, POST_ROUTES_SHOP } from '../../../constant';
+import { POST_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 import { useShopAuth } from '../../../hooks/useAppSelectors';
 import { useDispatch } from 'react-redux';
 import { fetchShopProfile } from '../../../redux/actionsCreators/shopAuthActions';
+import axiosShop from '../../../utils/axiosShop';
 
 
 
@@ -73,7 +74,7 @@ const ShopProfile = () => {
             const confirm = window.confirm("Do you what to make changes")
             try {
                 if (confirm) {
-                    const response = await axiosInstance.post(POST_ROUTES_SHOP.UPDATE_SHOP_PROFILR(shopProfile.id), { formData });
+                    const response = await axiosShop.post(POST_ROUTES_SHOP.UPDATE_SHOP_PROFILR(shopProfile.id), { formData });
                     if (response.data.success) {
                         showToast('Shop profile updated successfully', 'success');
                     }

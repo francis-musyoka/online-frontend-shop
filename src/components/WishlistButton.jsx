@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { axiosInstance, POST_ROUTES, GET_ROUTES, PATH_URL } from '../constant';
+import { useEffect, useState } from 'react';
+import { POST_ROUTES, GET_ROUTES, PATH_URL } from '../constant';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { useCustomerAuth } from '../hooks/useAppSelectors';
+import axiosCustomer from '../utils/axiosCustomer';
 
 const WishlistButton = ({ productId }) => {
     const [isWishlisted, setIsWishlisted] = useState(null);
@@ -15,7 +16,7 @@ const WishlistButton = ({ productId }) => {
     useEffect(() => {
         if (isAuthenticated) {
             const checkStatus = async () => {
-                const response = await axiosInstance.get(GET_ROUTES.ChECK_IS_IN_WISHLIST(productId));
+                const response = await axiosCustomer.get(GET_ROUTES.ChECK_IS_IN_WISHLIST(productId));
                 if (response.data.success) {
                     setIsWishlisted(response.data.isInWishlist)
                 }
@@ -28,7 +29,7 @@ const WishlistButton = ({ productId }) => {
     const handleWishlistClick = async () => {
         if (isAuthenticated) {
             try {
-                const response = await axiosInstance.post(POST_ROUTES.ADD_AND_REMOVE_WISHLIST(productId));
+                const response = await axiosCustomer.post(POST_ROUTES.ADD_AND_REMOVE_WISHLIST(productId));
                 if (response.data.success) {
                     setIsWishlisted((prev) => !prev);
                     showToast(response.data.message, 'success');

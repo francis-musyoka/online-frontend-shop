@@ -32,6 +32,7 @@ import CheckOut from './Features/customers/pages/CheckOut';
 import AddCategory from './Features/sellers/pages/AddCategory';
 import OrderSummary from './Features/customers/pages/orderSummary';
 import Email from './Features/customers/pages/email';
+import AddAddress from './Features/customers/component/AddAddress';
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
                                 </Route>
 
                             </Route>
+                            <Route path={PATH_URL.ADD_ADDRESS} element={<AddAddress />} />
                             <Route path={PATH_URL.PRODUCT_DETAILS} element={<ProductDetails />} />
                             <Route path={PATH_URL.CHECK_OUT} element={<CheckOut />} />
                             <Route path="/orders/:orderNumber" element={<OrderSummary />} />

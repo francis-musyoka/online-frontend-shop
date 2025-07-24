@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { validateAddAddressForm } from '../../../utils/validateForms';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { axiosInstance, PATCH_ROUTES, PATH_URL, POST_ROUTES } from '../../../constant';
+import { PATCH_ROUTES, PATH_URL, POST_ROUTES } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
+import axiosCustomer from '../../../utils/axiosCustomer';
 
 const AddAddress = (props) => {
     const { CheckOut, checkAddress, isEditing, editAddressModel, cancelMode } = props
     const location = useLocation();
-    const edit = location.state?.edit || isEditing || false;
-    const editAddress = location.state?.address || checkAddress || {}
+    const edit = location?.state?.edit || isEditing || false;
+    const editAddress = location?.state?.address || checkAddress || {}
 
     const [address, setAddress] = useState({
         firstName: editAddress.firstName || "",
@@ -51,7 +52,7 @@ const AddAddress = (props) => {
 
         if (isFormValid) {
             try {
-                const { data } = await axiosInstance.post(POST_ROUTES.ADD_ADDRESS, { formData: address });
+                const { data } = await axiosCustomer.post(POST_ROUTES.ADD_ADDRESS, { formData: address });
                 if (data.success) {
                     showToast(data.message, 'success');
                     console.log('HANDLE ADDRESS');
@@ -78,7 +79,7 @@ const AddAddress = (props) => {
         const isFormValid = validateForm();
         if (isFormValid) {
             try {
-                await axiosInstance.patch(PATCH_ROUTES.UPDATE_ADDRESS(addressId), { formData: address });
+                await axiosCustomer.patch(PATCH_ROUTES.UPDATE_ADDRESS(addressId), { formData: address });
                 showToast("Address updated succefully", 'success');
                 if (CheckOut) {
                     cancelMode();

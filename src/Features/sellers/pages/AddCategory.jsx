@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { axiosInstance, POST_ROUTES_SHOP } from '../../../constant';
+import { POST_ROUTES_SHOP } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
+import axiosShop from '../../../utils/axiosShop';
 
 const AddCategory = () => {
     const [name, setName] = useState('');
@@ -16,7 +17,7 @@ const AddCategory = () => {
         } else {
             setError('')
             try {
-                const { data } = await axiosInstance.post(POST_ROUTES_SHOP.ADD_CATEGORY, { name });
+                const { data } = await axiosShop.post(POST_ROUTES_SHOP.ADD_CATEGORY, { name });
                 if (data.success) {
                     setName('');
                     showToast(data.message, 'success')

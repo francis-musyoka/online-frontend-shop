@@ -1,13 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { HiXMark } from "react-icons/hi2";
 import { Link, useNavigate, } from 'react-router-dom';
-import { axiosInstance, BASEURL, GET_ROUTES, PATH_URL, } from '../../../constant';
+import { BASEURL, GET_ROUTES, PATH_URL, } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 import CartUpdateButton from '../../../components/CartUpdateButton';
 import Button from '../../../components/Button';
 import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
 import { addTocart, removeCartItem } from '../../../redux/actionsCreators/cartAction';
 import { useDispatch } from 'react-redux';
+import axiosCustomer from '../../../utils/axiosCustomer';
 
 
 const Cart = () => {
@@ -27,7 +28,7 @@ const Cart = () => {
         if (isAuthenticated) {
             try {
                 const getProductsInWishlist = async () => {
-                    const response = await axiosInstance.get(GET_ROUTES.GET_LIMITTED_PRODUCTS_IN_WHISHLIST);
+                    const response = await axiosCustomer.get(GET_ROUTES.GET_LIMITTED_PRODUCTS_IN_WHISHLIST);
                     if (response.data.success) {
                         setFavourite(response.data.myWishlist);
                     }
@@ -168,7 +169,7 @@ const Cart = () => {
                                                 KSH {product.product.price.toLocaleString()}
                                             </span>
 
-                                            <Button label="Add to Cart" variant="secondary" size="small" onClick={() => dispatch(addTocart(product.productId))} />
+                                            <Button label="Add to Cart" variant="secondary" size="small" onClick={() => dispatch(addTocart(isAuthenticated, product.productId))} />
                                         </div>
                                     </div>
                                 </div>

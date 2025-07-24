@@ -22,25 +22,32 @@ const Navbar = () => {
                 <div className="flex flex-col md:hidden">
                     <div className="flex items-center justify-between space-x-4">
                         <NavLink to={PATH_URL.CATEGORIES} className={({ isActive }) => `flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                            <FiMenu size={26} />
+                            <FiMenu size={20} />
                         </NavLink>
                         <NavLink to={PATH_URL.HOME} className={({ isActive }) => `flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                            <FaHome size={26} />
+                            <FaHome size={20} />
                         </NavLink>
                         {!isAuthenticated ? (
                             <NavLink to={PATH_URL.SIGN_IN} className={({ isActive }) => `flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                                <FiLogIn size={26} />
+                                <FiLogIn size={20} />
                             </NavLink>
                         ) : (
                             <NavLink to={PATH_URL.ACCOUNT.BASE} className={({ isActive }) => `flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                                <HiMiniUserCircle size={26} />
+                                <HiMiniUserCircle size={20} />
                             </NavLink>
                         )
                         }
 
 
-                        <NavLink to={PATH_URL.CART} className={({ isActive }) => `flex-1 flex justify-center ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
-                            <BsCartCheck size={26} />
+                        <NavLink to={PATH_URL.CART} className={({ isActive }) => `flex-1 flex justify-center relative ${isActive ? 'dark:text-gray-950' : 'text-white hover:text-secondary'}`}>
+                            <div className="relative">
+                                <BsCartCheck size={20} />
+                                {totalQuantity > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-secondary text-white text-xs px-1.5 py-0.5 rounded-full font-bold">
+                                        {totalQuantity}
+                                    </span>
+                                )}
+                            </div>
                         </NavLink>
                     </div>
 

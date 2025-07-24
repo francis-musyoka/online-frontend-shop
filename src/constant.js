@@ -9,7 +9,7 @@ const PATH_URL = {
   CART: '/cart',
   FORGOT_PASSWORD: '/forgotpassword',
   RESETPASSWORD: "/reset-password/:link",
-  PRODUCT_DETAILS: '/:product-name',
+  PRODUCT_DETAILS: '/:productId/:product-name',
   REVIEWS_DISPLAY: '',
   ADD_ADDRESS: '/book_address',
   CHECK_OUT: '/checkout/summary',
@@ -18,10 +18,10 @@ const PATH_URL = {
 
   ACCOUNT: {
     BASE: '/account',
-    PROFILE: 'profile',
-    ADDRESS: 'addresses',
-    ORDERS: 'orders',
-    FAVOURITES: 'favourites',
+    PROFILE: '/account/profile',
+    ADDRESS: '/account/addresses',
+    ORDERS: '/account/orders',
+    FAVOURITES: '/account/favourites',
   },
   SELL: {
     DASHBOARD: '/sell/dashboard',
@@ -118,19 +118,11 @@ const PUT_ROUTES_SHOP = {
   EDIT_PRODUCT: (id) => `/shop/edit/product/${id}`
 }
 
-
-
-//  Axios instance
-
 const BASEURL = process.env.NODE_ENV === 'production' ? productionApi : developementApi;  // backend url
 
-const axiosInstance = axios.create({
-  baseURL: BASEURL,
-  withCredentials: true
-});
 
 
 
 
 
-export { PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES, POST_ROUTES_SHOP, GET_ROUTES_SHOP, PUT_ROUTES_SHOP, BASEURL, axiosInstance };
+export { PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES, POST_ROUTES_SHOP, GET_ROUTES_SHOP, PUT_ROUTES_SHOP, BASEURL, };
