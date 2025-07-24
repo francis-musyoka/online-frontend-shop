@@ -117,7 +117,7 @@ const CheckOut = () => {
             try {
                 // Create Order
                 setIsProcessing(true)
-                const orderResponse = await axiosInstance.post(POST_ROUTES.CREATE_ORDER, {
+                const orderResponse = await axiosCustomer.post(POST_ROUTES.CREATE_ORDER, {
                     items,
                     paymentMethod,
                     shippingAddress,
