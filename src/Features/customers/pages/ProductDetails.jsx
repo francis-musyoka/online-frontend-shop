@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { axiosInstance, BASEURL, GET_ROUTES, PATH_URL } from '../../../constant';
+import { axiosInstance, BASEURL, GET_ROUTES } from '../../../constant';
 import WishlistButton from '../../../components/WishlistButton';
 import DisplayDescription from '../component/DescriptionEditor';
 import KeyFeaturesDisplay from '../component/KeyFeatursEditor';

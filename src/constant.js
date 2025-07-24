@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { developementApi, productionApi } from './utils/config';
 
 const PATH_URL = {
   HOME: '/',
@@ -120,24 +121,14 @@ const PUT_ROUTES_SHOP = {
 
 
 //  Axios instance
-const PRODUCTION = process.env.REACT_APP_PRODUCTION_BACK_END_URL;
-const DEVELOPMENT = process.env.REACT_APP_DEVELOPMENT_BACK_END_URL;
 
-const BASEURL = process.env.NODE_ENV === 'production' ? PRODUCTION : DEVELOPMENT;  // backend url
-
+const BASEURL = process.env.NODE_ENV === 'production' ? productionApi : developementApi;  // backend url
 
 const axiosInstance = axios.create({
   baseURL: BASEURL,
   withCredentials: true
 });
 
-
-// const BASEURL = "https://online-shop-platform-frank-backend.onrender.com";  // backend url
-
-// const axiosInstance = axios.create({
-//   baseURL: BASEURL,
-//   withCredentials: true
-// });
 
 
 

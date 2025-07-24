@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { validateAddAddressForm } from '../../../utils/validateForms';
-import {  useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { axiosInstance, PATCH_ROUTES, PATH_URL, POST_ROUTES } from '../../../constant';
 import { useToast } from '../../../context/ToastContext';
 
 const AddAddress = (props) => {
-    const {CheckOut, checkAddress, isEditing,editAddressModel, cancelMode, onAddingAddress } = props
+    const { CheckOut, checkAddress, isEditing, editAddressModel, cancelMode } = props
     const location = useLocation();
     const edit = location.state?.edit || isEditing || false;
     const editAddress = location.state?.address || checkAddress || {}
@@ -19,24 +19,24 @@ const AddAddress = (props) => {
         state: editAddress.state || "",
         zipCode: editAddress.zipCode || "",
         country: 'Kenya',
-        phoneNumber: editAddress.phoneNumber ||""
+        phoneNumber: editAddress.phoneNumber || ""
     });
 
     const [formErrors, setFormErrors] = useState({});
 
-    const {showToast} = useToast();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
-    
 
-    const handleChange = (e)=>{
+
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        setAddress((prev)=>({
+        setAddress((prev) => ({
             ...prev, [name]: value
         }));
     };
 
-    const validateForm = ()=>{
+    const validateForm = () => {
         const errors = validateAddAddressForm(address);
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
@@ -44,46 +44,46 @@ const AddAddress = (props) => {
 
 
     // ADD NEW ADDRESS
-    const handleAddAddress = async()=>{
+    const handleAddAddress = async () => {
         console.log('hello');
-        
+
         const isFormValid = validateForm();
 
-        if(isFormValid){
+        if (isFormValid) {
             try {
-                const {data} = await axiosInstance.post(POST_ROUTES.ADD_ADDRESS, {formData: address});
-                if(data.success){
+                const { data } = await axiosInstance.post(POST_ROUTES.ADD_ADDRESS, { formData: address });
+                if (data.success) {
                     showToast(data.message, 'success');
                     console.log('HANDLE ADDRESS');
-                    
-                    if(CheckOut){
+
+                    if (CheckOut) {
                         cancelMode();
                         // onAddingAddress(prev=>[...prev, address]);
                         console.log('HANDLE ADDRESS  AND UPDATE');
-                    }else{
+                    } else {
                         navigate(PATH_URL.ACCOUNT.ADDRESS)
                     }
-                    
+
                 }
             } catch (error) {
                 showToast(error.response?.data?.error || "Error occured")
             };
-        }; 
+        };
     };
 
     // HANDLE Edited address
-    const handleSaveChanges = async()=>{
+    const handleSaveChanges = async () => {
 
         const addressId = editAddress.id
         const isFormValid = validateForm();
-        if(isFormValid){
+        if (isFormValid) {
             try {
-                await axiosInstance.patch(PATCH_ROUTES.UPDATE_ADDRESS(addressId), {formData:address});
+                await axiosInstance.patch(PATCH_ROUTES.UPDATE_ADDRESS(addressId), { formData: address });
                 showToast("Address updated succefully", 'success');
-                if(CheckOut){
+                if (CheckOut) {
                     cancelMode();
                     editAddressModel();
-                }else{
+                } else {
                     navigate(PATH_URL.ACCOUNT.ADDRESS)
                 }
             } catch (error) {
@@ -92,200 +92,200 @@ const AddAddress = (props) => {
         }
     }
 
-    const handleCancel = ()=>{
-        if(CheckOut){
+    const handleCancel = () => {
+        if (CheckOut) {
             cancelMode();
             editAddressModel();
-        }else{
+        } else {
             navigate(PATH_URL.ACCOUNT.ADDRESS)
         }
     }
-    
+
 
     return (
-        <div className= {`${CheckOut ? " " : "max-w-screen-lg mx-auto mt-10 p-6 sm:p-6 " }`}>
-            {!CheckOut &&(
+        <div className={`${CheckOut ? " " : "max-w-screen-lg mx-auto mt-10 p-6 sm:p-6 "}`}>
+            {!CheckOut && (
                 <div className='border-b-2 border-neutral'>
                     {edit ? (
                         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-                        Edit your address
-                    </h1>
-                    ):(
+                            Edit your address
+                        </h1>
+                    ) : (
                         <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-                            Add a new address 
+                            Add a new address
                         </h1>
                     )}
                 </div>
             )}
-            
+
             <div className='my-5'>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
-
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="firstName"
-                                className="peer-focus:font-medium text-base text-neutral"
-                            >
-                                First Name
-                            </label>
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={address.firstName}
-                                onChange={handleChange}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            />
-                        
-                            {formErrors.firstName && <span className="text-red-700 text-xs">{formErrors.firstName}</span>}
-                        </div>
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="lastName"
-                                className="peer-focus:font-medium text-base text-neutral"
-                            >
-                                Last Name
-                            </label>
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={address.lastName}
-                                onChange={handleChange}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            />
-                            
-                            {formErrors.lastName && <span className="text-red-700 text-xs">{formErrors.lastName}</span>}
-                        </div>
-                    
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
 
                     <div className="relative z-0 w-full mb-5 group pt-6">
                         <label
-                            htmlFor="address"
-                            className="peer-focus:font-medium text-base text-neutral"                    >
-                            Address
+                            htmlFor="firstName"
+                            className="peer-focus:font-medium text-base text-neutral"
+                        >
+                            First Name
                         </label>
                         <input
                             type="text"
-                            name="address"
-                            value={address.address}
+                            name="firstName"
+                            value={address.firstName}
                             onChange={handleChange}
                             className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         />
-                        
-                        {formErrors.address && <span className="text-red-700 text-xs">{formErrors.address}</span>}
-                    </div>
 
+                        {formErrors.firstName && <span className="text-red-700 text-xs">{formErrors.firstName}</span>}
+                    </div>
                     <div className="relative z-0 w-full mb-5 group pt-6">
                         <label
-                            htmlFor="apartment"
-                            className="peer-focus:font-medium text-base text-neutral"                    >
-                            Apartment, suite, etc.
+                            htmlFor="lastName"
+                            className="peer-focus:font-medium text-base text-neutral"
+                        >
+                            Last Name
                         </label>
                         <input
                             type="text"
-                            name="apartment"
-                            value={address.apartment}
+                            name="lastName"
+                            value={address.lastName}
                             onChange={handleChange}
                             className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         />
-                        
-                        {formErrors.apartment && <span className="text-red-700 text-xs">{formErrors.apartment}</span>}
+
+                        {formErrors.lastName && <span className="text-red-700 text-xs">{formErrors.lastName}</span>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
+                </div>
 
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="city"
-                                className="peer-focus:font-medium text-base text-neutral">
-                                City
-                            </label> 
-                            <input 
-                                type="text"
-                                name="city"
-                                value={address.city}
-                                onChange={handleChange}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            />
-                        
-                            {formErrors.state && <span className="text-red-700 text-xs">{formErrors.state}</span>}
-                        </div>
+                <div className="relative z-0 w-full mb-5 group pt-6">
+                    <label
+                        htmlFor="address"
+                        className="peer-focus:font-medium text-base text-neutral"                    >
+                        Address
+                    </label>
+                    <input
+                        type="text"
+                        name="address"
+                        value={address.address}
+                        onChange={handleChange}
+                        className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    />
 
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="country"
-                                className="peer-focus:font-medium text-base text-neutral"                    >
-                                Country / Region
-                            </label> 
-                            <input 
-                                type="text"
-                                name="country"
-                                value={address.country}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                />
-                        
-                        </div>
-                    </div>
+                    {formErrors.address && <span className="text-red-700 text-xs">{formErrors.address}</span>}
+                </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
+                <div className="relative z-0 w-full mb-5 group pt-6">
+                    <label
+                        htmlFor="apartment"
+                        className="peer-focus:font-medium text-base text-neutral"                    >
+                        Apartment, suite, etc.
+                    </label>
+                    <input
+                        type="text"
+                        name="apartment"
+                        value={address.apartment}
+                        onChange={handleChange}
+                        className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    />
 
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="state"
-                                className="peer-focus:font-medium text-base text-neutral"                    >
-                                State / Province
-                            </label>
-                            <input
-                                type="text"
-                                name="state"
-                                value={address.state}
-                                onChange={handleChange}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            />
-                            
-                            {formErrors.city && <span className="text-red-700 text-xs">{formErrors.city}</span>}
-                            
-                        </div>
-                        
-                        <div className="relative z-0 w-full mb-5 group pt-6">
-                            <label
-                                htmlFor="zipCode"
-                                className="peer-focus:font-medium text-base text-neutral"                    >
-                            Zip Code
-                            </label> 
-                            <input 
-                                type="text"
-                                name="zipCode"
-                                value={address.zipCode}
-                                onChange={handleChange}
-                                className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                />
-                            
-                            {formErrors.zipCode && <span className="text-red-700 text-xs">{formErrors.zipCode}</span>}
-                        </div>
+                    {formErrors.apartment && <span className="text-red-700 text-xs">{formErrors.apartment}</span>}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
+
+                    <div className="relative z-0 w-full mb-5 group pt-6">
+                        <label
+                            htmlFor="city"
+                            className="peer-focus:font-medium text-base text-neutral">
+                            City
+                        </label>
+                        <input
+                            type="text"
+                            name="city"
+                            value={address.city}
+                            onChange={handleChange}
+                            className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        />
+
+                        {formErrors.state && <span className="text-red-700 text-xs">{formErrors.state}</span>}
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group pt-6">
                         <label
-                            htmlFor="phoneNumber"
+                            htmlFor="country"
                             className="peer-focus:font-medium text-base text-neutral"                    >
-                            Phone Number
-                        </label> 
-                        <input 
-                            type="number"
-                            name="phoneNumber"
-                            value={address.phoneNumber}
-                            onChange={handleChange}
+                            Country / Region
+                        </label>
+                        <input
+                            type="text"
+                            name="country"
+                            value={address.country}
                             className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         />
-                        {formErrors.phoneNumber && <span className="text-red-700 text-xs">{formErrors.phoneNumber}</span>}
+
                     </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 ">
+
+                    <div className="relative z-0 w-full mb-5 group pt-6">
+                        <label
+                            htmlFor="state"
+                            className="peer-focus:font-medium text-base text-neutral"                    >
+                            State / Province
+                        </label>
+                        <input
+                            type="text"
+                            name="state"
+                            value={address.state}
+                            onChange={handleChange}
+                            className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        />
+
+                        {formErrors.city && <span className="text-red-700 text-xs">{formErrors.city}</span>}
+
+                    </div>
+
+                    <div className="relative z-0 w-full mb-5 group pt-6">
+                        <label
+                            htmlFor="zipCode"
+                            className="peer-focus:font-medium text-base text-neutral"                    >
+                            Zip Code
+                        </label>
+                        <input
+                            type="text"
+                            name="zipCode"
+                            value={address.zipCode}
+                            onChange={handleChange}
+                            className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        />
+
+                        {formErrors.zipCode && <span className="text-red-700 text-xs">{formErrors.zipCode}</span>}
+                    </div>
+                </div>
+
+                <div className="relative z-0 w-full mb-5 group pt-6">
+                    <label
+                        htmlFor="phoneNumber"
+                        className="peer-focus:font-medium text-base text-neutral"                    >
+                        Phone Number
+                    </label>
+                    <input
+                        type="number"
+                        name="phoneNumber"
+                        value={address.phoneNumber}
+                        onChange={handleChange}
+                        className="block bg-white py-2 px-2 mt-3 w-full text-sm sm:text-lg text-gray-900 bg-transparent  border-2 rounded-md border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                    />
+                    {formErrors.phoneNumber && <span className="text-red-700 text-xs">{formErrors.phoneNumber}</span>}
+                </div>
+            </div>
 
 
             <div className="flex justify-between my-10">
                 <button
-                onClick={handleCancel}
+                    onClick={handleCancel}
                     className="py-1 px-4 border border-neutral bg-white text-neutral hover:bg-tertiary"
                 >
                     Cancel
@@ -299,7 +299,7 @@ const AddAddress = (props) => {
                     >
                         Save Changes
                     </button>
-                ):(
+                ) : (
                     <button
                         type='submit'
                         onClick={handleAddAddress}
@@ -309,7 +309,7 @@ const AddAddress = (props) => {
                     </button>
                 )}
             </div>
- 
+
         </div>
     );
 }
