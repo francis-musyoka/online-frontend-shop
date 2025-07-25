@@ -120,8 +120,4 @@ const PUT_ROUTES_SHOP = {
 const BASEURL = process.env.NODE_ENV === 'production' ? productionApi : developementApi;  // backend url
 
 
-
-
-
-
 export { PATH_URL, POST_ROUTES, GET_ROUTES, PATCH_ROUTES, POST_ROUTES_SHOP, GET_ROUTES_SHOP, PUT_ROUTES_SHOP, BASEURL, };
