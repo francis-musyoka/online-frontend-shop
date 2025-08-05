@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import axiosCustomer from '../../../utils/axiosCustomer';
 import { Link } from 'react-router-dom';
 import WishlistButton from '../../../components/WishlistButton';
+import Pagination from '../component/pagination';
 
 
 const Home = () => {
@@ -46,18 +47,18 @@ const Home = () => {
     const isAnyLoading = isLoading || loading;
 
     return (
-        <>
+        <div div className="relative min-h-screen">
             {isAnyLoading ? (<Spinning />) : (
                 <>
                     {searchResults && searchResults.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4 ">
                             {searchResults.map((product) => {
                                 const cartProduct = cartItem.find(item => item.productId === product.id);
                                 const discountNum = Number(product.discount);
                                 const discountPrice = discountNum > 0 ? Math.floor((discountNum / 100) * product.price) : 0;
                                 const productPrice = product.price - discountPrice;
                                 return (
-                                    <div className="w-full sm:w-60 bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300">
+                                    <div className="w-full sm:w-60 bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300 ">
                                         <Link to={`/${product.id}/${product.productName}`} className="relative flex justify-center">
                                             <img
                                                 src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null}
@@ -178,8 +179,12 @@ const Home = () => {
 
                 </>
             )}
+            <div className="absolute bottom-4 left-0 w-full">
+                <Pagination />
+            </div>
 
-        </>
+
+        </div>
     );
 }
 
