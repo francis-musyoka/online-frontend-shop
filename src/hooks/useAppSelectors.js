@@ -21,3 +21,11 @@ export const useCart = () => {
     const error = useSelector((state) => state.cart.error);
     return { cartItem, totalQuantity, totalAmount, error };
 };
+
+export const useSearchQuery = () => {
+    const searchQuery = useSelector((state) => state.searchQuery.searchQuery);
+    const searchResults = useSelector((state) => state.searchQuery.searchResults);
+    const loading = useSelector((state) => state.searchQuery.loading);
+    const error = useSelector((state) => state.searchQuery.error);
+    return { searchQuery, searchResults, loading, error };
+};

@@ -1,13 +1,12 @@
 
-import React, { } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiLogIn, FiMenu } from 'react-icons/fi';
 import { BsCartCheck } from 'react-icons/bs';
 import { HiMiniUserCircle } from 'react-icons/hi2';
-import { GrSearch } from "react-icons/gr";
 import { FaHome } from "react-icons/fa";
 import { PATH_URL } from '../../../constant';
 import { useCart, useCustomerAuth } from '../../../hooks/useAppSelectors';
+import SearchBar from './SearchBar';
 
 
 
@@ -51,18 +50,7 @@ const Navbar = () => {
                         </NavLink>
                     </div>
 
-                    <div className="relative w-full max-w-lg px-3 pt-3">
-                        <div className="absolute inset-y-0 left-5 flex items-center pt-3">
-                            <GrSearch className="w-6 h-6 text-neutral" />
-                        </div>
-                        <input
-                            type="search"
-                            id="search-navbar"
-                            className="block w-full pl-12 p-2 text-sm border border-gray-300 rounded-lg bg-tertiary text-neutral placeholder-neutral"
-                            placeholder="Search..."
-                        />
-
-                    </div>
+                    <SearchBar />
                 </div>
 
 
@@ -87,18 +75,7 @@ const Navbar = () => {
                         </NavLink>
                     </div>
 
-                    <div className="relative w-full max-w-lg px-3">
-                        <div className="absolute inset-y-0 left-5 flex items-center">
-                            <GrSearch className="w-6 h-6 text-neutral" />
-                        </div>
-                        <input
-                            type="search"
-                            id="search-navbar"
-                            className="block w-full pl-12 p-2 text-sm border border-gray-300 rounded-lg bg-tertiary text-neutral placeholder-neutral"
-                            placeholder="Search..."
-                            aria-label="Search through site content"
-                        />
-                    </div>
+                    <SearchBar />
 
                     <div className="flex items-center space-x-16">
                         {!isAuthenticated ? (

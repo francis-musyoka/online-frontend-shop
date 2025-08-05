@@ -75,7 +75,8 @@ const GET_ROUTES = {
   GET_ADDRESSES: '/addresses',
   GET_MPESA_PAYMENT: '/mpesapayment',
   GET_MPESA_TRANSACTION_STATUS: (transactionId) => `/mpesa/transaction/status/${transactionId}`,
-  GET_ORDER_SUMMARY: (orderId) => `/order/summary/${orderId}`
+  GET_ORDER_SUMMARY: (orderId) => `/order/summary/${orderId}`,
+  SEARCH_PRODUCTS: '/search/products',
 
 };
 
