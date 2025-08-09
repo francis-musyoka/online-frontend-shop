@@ -1,6 +1,7 @@
 import { loginSuccess, logoutSuccess, userProfile, authError } from "../slices/customerAuthSlice";
 import { GET_ROUTES, POST_ROUTES } from '../../constant';
 import axiosCustomer from "../../utils/axiosCustomer";
+import { clearCart } from "../slices/cartSlice";
 
 export const logInAction = (email, password) => {
     return async (dispatch) => {
@@ -33,6 +34,7 @@ export const logOutAction = () => {
                 localStorage.removeItem("auth");
                 localStorage.removeItem("token");
                 dispatch(logoutSuccess());
+                dispatch(clearCart());
             };
         } catch (error) {
             dispatch(authError(error.response?.data?.error || "Log out failed"))
