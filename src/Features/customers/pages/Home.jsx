@@ -21,7 +21,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const { cartItem } = useCart();
     const { isAuthenticated } = useCustomerAuth();
-
+    
     const fetchProducts = async (page) => {
         try {
             setIsLoading(true)
@@ -193,7 +193,7 @@ const Home = () => {
                 <Pagination
                     currentPage={currentPage}
                     totalItems={totalItems}
-                    itemsPerPage={itemsPerPage}
+                    itemsPerPage={parseInt(itemsPerPage)}
                     onPageChange={setCurrentPage}
 
                 />
