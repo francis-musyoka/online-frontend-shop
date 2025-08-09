@@ -2,20 +2,30 @@ import { loginSuccess, logoutSuccess, userProfile, authError } from "../slices/c
 import { GET_ROUTES, POST_ROUTES } from '../../constant';
 import axiosCustomer from "../../utils/axiosCustomer";
 import { clearCart } from "../slices/cartSlice";
+import { fetchCart } from "./cartAction";
 
 export const logInAction = (email, password) => {
     return async (dispatch) => {
+        const guestId = localStorage.getItem('guestId') || null;
+
         try {
             const response = await axiosCustomer.post(`${POST_ROUTES.SIGN_IN}`, {
                 email,
                 password,
-                guestId: localStorage.getItem('guestId') || null,
+                guestId
             });
 
             if (response.data.success) {
                 localStorage.setItem('auth', JSON.stringify(true));
                 localStorage.setItem('token', JSON.stringify(response.data.token));
                 dispatch(loginSuccess());
+
+                //  After login, fetch user profile
+                await dispatch(fetchUserProfile());
+
+                //  Then fetch user's cart
+                const isAuthenticated = true; // since login succeeded
+                dispatch(fetchCart(isAuthenticated, guestId))
 
             };
 

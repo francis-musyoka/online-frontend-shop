@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { validateUpdateForm } from '../../../../utils/validateForms';
-import {  PATCH_ROUTES } from '../../../../constant';
+import { PATCH_ROUTES } from '../../../../constant';
 import ChangePassword from './ChangePassword';
 import { useDispatch } from 'react-redux';
 import { useCustomerAuth } from '../../../../hooks/useAppSelectors';
 import { fetchUserProfile } from '../../../../redux/actionsCreators/customerAuthActions';
 import axiosCustomer from '../../../../utils/axiosCustomer';
+import { CircleUserRound } from 'lucide-react';
 
 
 const Profile = () => {
@@ -93,11 +94,9 @@ const Profile = () => {
                 </div>
 
                 <div className="flex items-center space-x-4 mt-4">
-                    <img
-                        src={user?.profilePicture ?? 'https://via.placeholder.com/150'}
-                        alt="User"
-                        className="w-16 h-16 sm:w-16 sm:h-16 rounded-full"
-                    />
+
+                    <CircleUserRound className="w-10 h-10 text-gray-600" />
+
                     <div>
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-800">
                             {user?.firstName} {user?.lastName}
