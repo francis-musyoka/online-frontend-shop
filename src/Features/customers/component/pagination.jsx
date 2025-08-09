@@ -1,31 +1,65 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
 
-const Pagination = () => {
+
+const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
+    const [start, setStart] = useState(1);
+    const [end, setEnd] = useState(itemsPerPage);
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage)
+    const handlePrev = () => {
+        if (currentPage > 1) {
+            const newEnd = start - 1;
+            const newStart = Math.max(1, newEnd - itemsPerPage + 1);
+            setStart(newStart);
+            setEnd(newEnd);
+            onPageChange(currentPage - 1)
+        };
+    };
+
+    const handleNext = () => {
+        if (currentPage < totalPages) {
+            const newStart = end + 1;
+            const newEnd = Math.min(totalItems, newStart + itemsPerPage - 1);
+            setStart(newStart);
+            setEnd(newEnd);
+            onPageChange(currentPage + 1)
+        }
+    };
+
+    const isPrevButtonDisabled = start === 1;
+    const isNextButtonDisabled = end === totalItems;
+
+
     return (
-        <div className="flex justify-center items-center gap-4 mt-6">
+        <div className="flex justify-end items-center gap-4 mt-6 mr-6">
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-gray-600 ">
-                <ArrowLeft className="h-5 w-5" />
-            </div>
+            <p className="text-lg px-3 py-1 rounded-md  transition text-gray-700">
+                {start} - {end} of {totalItems}
+            </p>
 
-            {/* Page numbers */}
-            {[1, 2, 3, 4, 5].map((page, index) => (
-                <p
-                    key={index}
-                    className={`text-lg px-3 py-1 rounded-md font-medium transition ${page === 1
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-700 hover:underline hover:text-blue-600'
-                        }`}
-                >
-                    {page}
-                </p>
-            ))}
+
+            <button
+                onClick={handlePrev}
+                disabled={isPrevButtonDisabled}
+                className={`flex h-10 w-10 items-center justify-center rounded-full ${!isPrevButtonDisabled
+                    ? "text-neutral  hover:bg-gray-300 font-bold"
+                    : "disabled:text-gray-400"}`}
+            >
+                < ChevronLeft className="h-7 w-7" />
+            </button>
 
             {/* Next button */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-400 text-white hover:bg-gray-500 cursor-pointer">
-                <ArrowRight className="h-5 w-5" />
-            </div>
-        </div>
+            <button
+                onClick={handleNext}
+                disabled={isNextButtonDisabled}
+                className={`flex h-10 w-10 items-center justify-center rounded-full ${!isNextButtonDisabled
+                    ? "text-neutral  hover:bg-gray-300 font-bold"
+                    : "disabled:text-gray-400"}`}
+            >
+                < ChevronRight className="h-7 w-7" />
+            </button>
+        </div >
     );
 };
 

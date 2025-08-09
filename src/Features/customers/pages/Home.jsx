@@ -9,38 +9,48 @@ import axiosCustomer from '../../../utils/axiosCustomer';
 import { Link } from 'react-router-dom';
 import WishlistButton from '../../../components/WishlistButton';
 import Pagination from '../component/pagination';
-
+import { itemsPerPage } from '../../../utils/config';
 
 const Home = () => {
     const { searchResults, loading } = useSearchQuery();
     const [product, setProduct] = useState('');
     const [isLoading, setIsLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+
     const dispatch = useDispatch();
     const { cartItem } = useCart();
     const { isAuthenticated } = useCustomerAuth();
 
-    useEffect(() => {
-
-        const fetchProducts = async () => {
-            try {
-                setIsLoading(true)
-                const response = await axiosCustomer.get(GET_ROUTES.GET_ALL_PRODUCTS);
-                if (response.data?.success) {
-                    setProduct(response.data.products)
-                }
-            } catch (error) {
-                console.log(error);
-
-            } finally {
-                setIsLoading(false)
+    const fetchProducts = async (page) => {
+        try {
+            setIsLoading(true)
+            const queryParams = {
+                pageSize: itemsPerPage,
+                page: page
             }
+            const response = await axiosCustomer.get(GET_ROUTES.GET_ALL_PRODUCTS, { params: queryParams });
+            console.log(response);
 
-        };
-        fetchProducts();
+            if (response.data?.success) {
+                setProduct(response.data.products);
+                setTotalItems(response.data.totalItems);
+            }
+        } catch (error) {
+            console.log(error);
 
-    }, [setProduct]);
+        } finally {
+            setIsLoading(false)
+        }
 
-    const handleClick = async (productId) => {
+    };
+
+    useEffect(() => {
+        fetchProducts(currentPage)
+    }, [currentPage]);
+
+
+    const handleAddToCart = async (productId) => {
         dispatch(addTocart(isAuthenticated, productId));
     };
 
@@ -95,7 +105,7 @@ const Home = () => {
                                                 {cartItem.some(items => items.productId === product.id) ? (
                                                     <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity} />
                                                 ) : (
-                                                    <button onClick={() => handleClick(product.id)} disabled={product.status !== "Available"} className="bg-primary hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm disabled:bg-gray-300">
+                                                    <button onClick={() => handleAddToCart(product.id)} disabled={product.status !== "Available"} className="bg-primary hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm disabled:bg-gray-300">
                                                         Add to Cart
                                                     </button>
                                                 )}
@@ -122,7 +132,7 @@ const Home = () => {
                                         <div className="w-full sm:w-60 bg-white rounded-2xl shadow-md overflow-hidden border hover:shadow-lg transition duration-300">
                                             <Link to={`/${product.id}/${product.productName}`} className="relative flex justify-center">
                                                 <img
-                                                    src={product.image && product.image.length > 0 ? `${BASEURL}${product.image[0]}` : null}
+                                                    src={product.image ? `${BASEURL}${product.image}` : null}
                                                     alt={product.productName || 'Product Image'}
                                                     className="w-40 h-30 object-cover"
                                                 />
@@ -137,7 +147,7 @@ const Home = () => {
                                                     {product.productName}
                                                 </Link>
 
-                                                <span className="text-xs text-gray-500">Category: <Link to={'#'} className='ml-2 text-secondary hover:underline'>{product.categories.name}</Link>  </span>
+                                                <span className="text-xs text-gray-500">Category: <Link to={'#'} className='ml-2 text-secondary hover:underline'>{product.categories}</Link>  </span>
                                                 {/* <div className="flex items-center text-yellow-500 text-sm gap-1">
                                             ★★★★☆
                                             <span className="text-xs text-gray-500">(120)</span>
@@ -156,7 +166,7 @@ const Home = () => {
                                                     {cartItem.some(items => items.productId === product.id) ? (
                                                         <CartUpdateButton productId={product.id} quantity={cartProduct.quantity} productQuantity={product.quantity} />
                                                     ) : (
-                                                        <button onClick={() => handleClick(product.id)} disabled={product.status !== "Available"} className="bg-primary hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm disabled:bg-gray-300">
+                                                        <button onClick={() => handleAddToCart(product.id)} disabled={product.status !== "Available"} className="bg-primary hover:bg-blue-500 text-white px-3 py-1 rounded-md text-sm disabled:bg-gray-300">
                                                             Add to Cart
                                                         </button>
                                                     )}
@@ -180,7 +190,13 @@ const Home = () => {
                 </>
             )}
             <div className="absolute bottom-4 left-0 w-full">
-                <Pagination />
+                <Pagination
+                    currentPage={currentPage}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={setCurrentPage}
+
+                />
             </div>
 
 
